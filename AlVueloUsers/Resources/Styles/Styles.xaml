@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Color x:Key="AlVueloDarkRed">#4E222A</Color>
+    <Color x:Key="AlVueloRed">#FF5757</Color>
+    <Color x:Key="AlVueloBg">#FFF9E5</Color>
+    <Color x:Key="AlVueloBlack">#000000</Color>
+    <Color x:Key="SeparatorGray">#F0F0F0</Color>
+    <Color x:Key="TextSecondary">#757575</Color>
+
+    <Style x:Key="SectionHeaderStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="Margin" Value="0,5,0,3" />
+    </Style>
+
+    <Style x:Key="DeliveryOptionBorderStyle" TargetType="Border">
+        <Setter Property="Stroke" Value="#E0E0E0" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="Margin" Value="0,1" />
+        <Setter Property="BackgroundColor" Value="White" />
+    </Style>
+
+    <Style x:Key="CardIconBorderStyle" TargetType="Border">
+        <Setter Property="HeightRequest" Value="30" />
+        <Setter Property="WidthRequest" Value="45" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 6" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+    </Style>
+
+    <Style x:Key="PickerDropdownStyle" TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource AlVueloRed}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TitleColor" Value="{StaticResource TextSecondary}" />
+        <Setter Property="HorizontalTextAlignment" Value="End" />
+        <Setter Property="HeightRequest" Value="40" />
+    </Style>
+
+</ResourceDictionary>

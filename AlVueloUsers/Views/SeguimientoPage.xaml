@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AlVueloUsers.Views.SeguimientoPage"
+             Title="Seguimiento de Pedido">
+
+    <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="Center">
+        <Label Text="Estado de tu Orden" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+
+        <Label x:Name="lblOrderId" Text="Orden #---" HorizontalOptions="Center" />
+
+        <Frame BorderColor="#C23939" CornerRadius="20" Padding="20">
+            <VerticalStackLayout Spacing="15">
+                <Label x:Name="lblEstado" Text="PROCESANDO" TextColor="#C23939" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center" />
+
+                <ProgressBar x:Name="barProgreso" ProgressColor="#C23939" HeightRequest="15" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <Button Text="Actualizar Estado" Clicked="OnActualizarClicked" BackgroundColor="Gray" />
+    </VerticalStackLayout>
+</ContentPage>

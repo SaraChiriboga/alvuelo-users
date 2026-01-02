@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AlVueloUsers.Views.PagoPage"
+             BackgroundColor="{StaticResource AlVueloBg}">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20" Spacing="10">
+
+                <Label Text="Opciones de Servicio" Style="{StaticResource SectionHeaderStyle}" />
+
+                <Border Style="{StaticResource DeliveryOptionBorderStyle}" x:Name="BorderCampus" x:FieldModifier="public">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnServicioSelected" CommandParameter="Campus"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid ColumnDefinitions="Auto, *, Auto">
+                        <Label Grid.Column="0" FontFamily="FASolid" Text="&#xf21c;" FontSize="20" Margin="0,0,15,0" VerticalOptions="Center"/>
+
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="Entrega en campus" FontAttributes="Bold"/>
+                            <Label x:Name="LabelTiempoEstimado" TextColor="{StaticResource TextSecondary}" FontSize="13"/>
+                        </VerticalStackLayout>
+
+                        <HorizontalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="5">
+                            <Picker x:Name="PickerCampus"
+                                    Style="{StaticResource PickerDropdownStyle}"
+                                    Title="Campus"
+                                    WidthRequest="100">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>UdlaPark</x:String>
+                                        <x:String>Granados</x:String>
+                                        <x:String>Col&#243;n</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
+
+                            <Label FontFamily="FASolid" 
+                                Text="&#xf078;" 
+                                FontSize="10" 
+                                TextColor="{StaticResource AlVueloRed}" 
+                                VerticalOptions="Center"
+                                InputTransparent="True" />
+                        </HorizontalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource DeliveryOptionBorderStyle}" x:Name="BorderRetiro" x:FieldModifier="public">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnServicioSelected" CommandParameter="Retiro"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid ColumnDefinitions="Auto, *, Auto">
+                        <Label FontFamily="FASolid" Text="&#xf290;" TextColor="{StaticResource TextSecondary}" FontSize="20" Margin="0,0,15,0" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Retiro en Restaurante" FontAttributes="Bold"/>
+                            <Label Text="Toma lo que pediste en caja" TextColor="{StaticResource TextSecondary}" FontSize="13"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="5 - 10 minutos" VerticalOptions="Center" FontAttributes="Bold"/>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource DeliveryOptionBorderStyle}" x:Name="BorderConsumo" x:FieldModifier="public">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnServicioSelected" CommandParameter="Consumo"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid ColumnDefinitions="Auto, *, Auto">
+                        <Label FontFamily="FASolid" Text="&#xf0ab;" TextColor="{StaticResource TextSecondary}" FontSize="20" Margin="0,0,15,0" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Consumo en Restaurante" FontAttributes="Bold"/>
+                            <Label Text="Indica tu n&#250;mero de mesa" TextColor="{StaticResource TextSecondary}" FontSize="13"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Label Text="Valores a pagar" Style="{StaticResource SectionHeaderStyle}" />
+
+                <VerticalStackLayout Spacing="2">
+                    <Grid ColumnDefinitions="*, Auto" Margin="0,1,0,0">
+                        <Label Text="Productos" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Column="1" Text="$0.96"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*, Auto" Margin="0,1,0,0">
+                        <Label Text="Tarifa de servicio" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Column="1" Text="$0.96"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*, Auto" Margin="0,1,0,0">
+                        <Label Text="Env&#237;o" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Grid.Column="1" Text="$0.96"/>
+                    </Grid>
+                </VerticalStackLayout>
+
+                <Grid ColumnDefinitions="*, Auto">
+                    <Label Text="Total" FontAttributes="Bold" FontSize="18"/>
+                    <HorizontalStackLayout Grid.Column="1" Spacing="5">
+                        <Label Text="$7.54" FontAttributes="Bold" FontSize="18"/>
+                    </HorizontalStackLayout>
+                </Grid>
+
+                <Label Text="M&#233;todos de Pago" Style="{StaticResource SectionHeaderStyle}" />
+
+                <VerticalStackLayout Spacing="0" Margin="0,0,0,20">
+                    <Grid x:Name="GridMetodo_Tarjeta" ColumnDefinitions="Auto, *" Padding="0,10">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMetodoPagoSelected" CommandParameter="Tarjeta"/>
+                        </Grid.GestureRecognizers>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState Name="PointerOver_Tarjeta">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#F7F7F7" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Normal_Tarjeta" />
+                                <VisualState Name="Selected_Tarjeta">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="{StaticResource AlVueloBg}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border x:Name="BorderIcon_Tarjeta" Style="{StaticResource CardIconBorderStyle}">
+                            <Image x:Name="IconoTarjeta">
+                                <Image.Source>
+                                    <FontImageSource FontFamily="FABrands" Glyph="&#xf1f2;" Color="#FF6000" Size="20"/>
+                                </Image.Source>
+                            </Image>
+                        </Border>
+                        <Label x:Name="LabelNombreTarjeta" Text="Cargando tarjeta..." Grid.Column="1" VerticalOptions="Center" Margin="15,0" TextColor="{StaticResource TextSecondary}"/>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource SeparatorGray}" Margin="0,1" />
+
+                    <Grid x:Name="GridMetodo_Deuna" ColumnDefinitions="Auto, *" Padding="0,10">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMetodoPagoSelected" CommandParameter="Deuna"/>
+                        </Grid.GestureRecognizers>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState Name="PointerOver_Deuna">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#F7F7F7" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Normal_Deuna" />
+                                <VisualState Name="Selected_Deuna">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="{StaticResource AlVueloBg}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border x:Name="BorderIcon_Deuna" Style="{StaticResource CardIconBorderStyle}">
+                            <Image Source="deuna_logo.png" 
+                                HeightRequest="24" 
+                                WidthRequest="24" 
+                                HorizontalOptions="Center" 
+                                VerticalOptions="Center"/>
+                        </Border>
+                        <Label x:Name="LabelDeuna" Grid.Column="1" Text="Deuna!" VerticalOptions="Center" Margin="15,0" TextColor="{StaticResource TextSecondary}"/>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource SeparatorGray}" Margin="0,1" />
+
+                    <Grid x:Name="GridMetodo_Transfer" ColumnDefinitions="Auto, *" Padding="0,10">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMetodoPagoSelected" CommandParameter="Transferencia"/>
+                        </Grid.GestureRecognizers>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState Name="PointerOver_Transfer">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#F7F7F7" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Normal_Transfer" />
+                                <VisualState Name="Selected_Transfer">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="{StaticResource AlVueloBg}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border x:Name="BorderIcon_Transfer" Style="{StaticResource CardIconBorderStyle}">
+                            <Label FontFamily="FASolid" Text="&#xf19c;" TextColor="#004A99" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <Label x:Name="LabelTransfer" Grid.Column="1" Text="Transferencia Bancaria" VerticalOptions="Center" Margin="15,0" TextColor="{StaticResource TextSecondary}"/>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource SeparatorGray}" Margin="0,1" />
+
+                    <Grid x:Name="GridMetodo_Efectivo" ColumnDefinitions="Auto, *" Padding="0,10">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMetodoPagoSelected" CommandParameter="Efectivo"/>
+                        </Grid.GestureRecognizers>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState Name="PointerOver_Efectivo">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#F7F7F7" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Normal_Efectivo" />
+                                <VisualState Name="Selected_Efectivo">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="{StaticResource AlVueloBg}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border x:Name="BorderIcon_Efectivo" Style="{StaticResource CardIconBorderStyle}">
+                            <Label FontFamily="FASolid" Text="&#xf0d6;" TextColor="#228B22" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <Label x:Name="LabelEfectivo" Grid.Column="1" Text="Efectivo" VerticalOptions="Center" Margin="15,0" TextColor="{StaticResource TextSecondary}"/>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource SeparatorGray}" Margin="0,1" />
+
+                    <Grid x:Name="GridMetodo_Agregar" ColumnDefinitions="Auto, *" Padding="0,10">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMetodoPagoSelected" CommandParameter="Agregar"/>
+                        </Grid.GestureRecognizers>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState Name="PointerOver_Agregar">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#F7F7F7" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Normal_Agregar" />
+                                <VisualState Name="Selected_Agregar">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="{StaticResource AlVueloBg}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border x:Name="BorderIcon_Agregar" Style="{StaticResource CardIconBorderStyle}">
+                            <Label FontFamily="FASolid" Text="&#xf055;" TextColor="{StaticResource TextSecondary}" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <Label x:Name="LabelAgregar" Grid.Column="1" Text="Agregar una nueva tarjeta" VerticalOptions="Center" Margin="15,0" TextColor="{StaticResource TextSecondary}"/>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <VerticalStackLayout Grid.Row="1" BackgroundColor="{StaticResource AlVueloBg}">
+           
+
+            <Button Text="Pagar" 
+                    BackgroundColor="{StaticResource AlVueloDarkRed}" 
+                    TextColor="White" 
+                    HeightRequest="60" 
+                    CornerRadius="12" 
+                    Margin="20" 
+                    FontAttributes="Bold"
+                    FontSize="18"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
