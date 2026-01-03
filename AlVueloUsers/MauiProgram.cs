@@ -30,6 +30,34 @@ namespace AlVueloUsers
                 // Opcional: Quitar padding interno para que quede bien alineado
                 handler.PlatformView.SetPadding(0, 0, 0, 0);
             });
+
+            // Cambiar color del indicador (botón) del RadioButton en Android al color AlVueloRed
+            RadioButtonHandler.Mapper.AppendToMapping("AlVueloRadioColor", (handler, view) =>
+            {
+                try
+                {
+                    // Color hex definido en recursos XAML: #FF5757
+                    var androidColor = Android.Graphics.Color.ParseColor("#000000");
+                    var stateList = Android.Content.Res.ColorStateList.ValueOf(androidColor);
+
+                    // handler.PlatformView is a Android.Views.View at compile time; cast to native types safely
+                    var nativeView = handler.PlatformView;
+
+                    if (nativeView is Android.Widget.CompoundButton compoundButton)
+                    {
+                        compoundButton.ButtonTintList = stateList;
+                    }
+
+                    if (nativeView is Android.Widget.TextView textView)
+                    {
+                        textView.SetTextColor(androidColor);
+                    }
+                }
+                catch
+                {
+                    // Silenciar errores para evitar romper el build en entornos no Android
+                }
+            });
 #endif
 
             return builder.Build();

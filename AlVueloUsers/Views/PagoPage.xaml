@@ -72,12 +72,12 @@
                         <Label FontFamily="FASolid" Text="&#xf0ab;" TextColor="{StaticResource TextSecondary}" FontSize="20" Margin="0,0,15,0" VerticalOptions="Center"/>
                         <VerticalStackLayout Grid.Column="1">
                             <Label Text="Consumo en Restaurante" FontAttributes="Bold"/>
-                            <Label Text="Indica tu n&#250;mero de mesa" TextColor="{StaticResource TextSecondary}" FontSize="13"/>
+                            <Label Text="Indica tu n&#250;mero de mesa más adelante" TextColor="{StaticResource TextSecondary}" FontSize="13"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
 
-                <Label Text="Valores a pagar" Style="{StaticResource SectionHeaderStyle}" />
+                <Label Text="Valores a Pagar" Style="{StaticResource SectionHeaderStyle}" />
 
                 <VerticalStackLayout Spacing="2">
                     <Grid ColumnDefinitions="*, Auto" Margin="0,1,0,0">
@@ -90,7 +90,7 @@
                     </Grid>
                     <Grid ColumnDefinitions="*, Auto" Margin="0,1,0,0">
                         <Label Text="Env&#237;o" TextColor="{StaticResource TextSecondary}"/>
-                        <Label Grid.Column="1" Text="$0.96"/>
+                        <Label x:Name="LabelEnvioAmount" Grid.Column="1" Text="$0.00"/>
                     </Grid>
                 </VerticalStackLayout>
 
@@ -104,7 +104,7 @@
                 <Label Text="M&#233;todos de Pago" Style="{StaticResource SectionHeaderStyle}" />
 
                 <VerticalStackLayout Spacing="0" Margin="0,0,0,20">
-                    <Grid x:Name="GridMetodo_Tarjeta" ColumnDefinitions="Auto, *" Padding="0,10">
+                    <Grid x:Name="GridMetodo_Tarjeta" ColumnDefinitions="Auto, *, Auto" Padding="0,10">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnMetodoPagoSelected" CommandParameter="Tarjeta"/>
                         </Grid.GestureRecognizers>
@@ -133,11 +133,12 @@
                             </Image>
                         </Border>
                         <Label x:Name="LabelNombreTarjeta" Text="Cargando tarjeta..." Grid.Column="1" VerticalOptions="Center" Margin="15,0" TextColor="{StaticResource TextSecondary}"/>
+                        <RadioButton x:Name="RadioTarjeta" Grid.Column="2" GroupName="MetodoPagoGroup" VerticalOptions="Center"/>
                     </Grid>
 
                     <BoxView HeightRequest="1" Color="{StaticResource SeparatorGray}" Margin="0,1" />
 
-                    <Grid x:Name="GridMetodo_Deuna" ColumnDefinitions="Auto, *" Padding="0,10">
+                    <Grid x:Name="GridMetodo_Deuna" ColumnDefinitions="Auto, *, Auto" Padding="0,10">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnMetodoPagoSelected" CommandParameter="Deuna"/>
                         </Grid.GestureRecognizers>
@@ -166,11 +167,12 @@
                                 VerticalOptions="Center"/>
                         </Border>
                         <Label x:Name="LabelDeuna" Grid.Column="1" Text="Deuna!" VerticalOptions="Center" Margin="15,0" TextColor="{StaticResource TextSecondary}"/>
+                        <RadioButton x:Name="RadioDeuna" Grid.Column="2" GroupName="MetodoPagoGroup" VerticalOptions="Center"/>
                     </Grid>
 
                     <BoxView HeightRequest="1" Color="{StaticResource SeparatorGray}" Margin="0,1" />
 
-                    <Grid x:Name="GridMetodo_Transfer" ColumnDefinitions="Auto, *" Padding="0,10">
+                    <Grid x:Name="GridMetodo_Transfer" ColumnDefinitions="Auto, *, Auto" Padding="0,10">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnMetodoPagoSelected" CommandParameter="Transferencia"/>
                         </Grid.GestureRecognizers>
@@ -195,11 +197,12 @@
                             <Label FontFamily="FASolid" Text="&#xf19c;" TextColor="#004A99" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <Label x:Name="LabelTransfer" Grid.Column="1" Text="Transferencia Bancaria" VerticalOptions="Center" Margin="15,0" TextColor="{StaticResource TextSecondary}"/>
+                        <RadioButton x:Name="RadioTransfer" Grid.Column="2" GroupName="MetodoPagoGroup" VerticalOptions="Center"/>
                     </Grid>
 
                     <BoxView HeightRequest="1" Color="{StaticResource SeparatorGray}" Margin="0,1" />
 
-                    <Grid x:Name="GridMetodo_Efectivo" ColumnDefinitions="Auto, *" Padding="0,10">
+                    <Grid x:Name="GridMetodo_Efectivo" ColumnDefinitions="Auto, *, Auto" Padding="0,10">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnMetodoPagoSelected" CommandParameter="Efectivo"/>
                         </Grid.GestureRecognizers>
@@ -224,6 +227,7 @@
                             <Label FontFamily="FASolid" Text="&#xf0d6;" TextColor="#228B22" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <Label x:Name="LabelEfectivo" Grid.Column="1" Text="Efectivo" VerticalOptions="Center" Margin="15,0" TextColor="{StaticResource TextSecondary}"/>
+                        <RadioButton x:Name="RadioEfectivo" Grid.Column="2" GroupName="MetodoPagoGroup" VerticalOptions="Center"/>
                     </Grid>
 
                     <BoxView HeightRequest="1" Color="{StaticResource SeparatorGray}" Margin="0,1" />

@@ -18,6 +18,12 @@ namespace AlVueloUsers.Views
             // 1. Ocultar la navegación nativa
             NavigationPage.SetHasNavigationBar(this, false);
 
+            // subscribe radio events if present (generated fields from XAML)
+            if (RadioTarjeta != null) RadioTarjeta.CheckedChanged += OnRadioMetodoCheckedChanged;
+            if (RadioDeuna != null) RadioDeuna.CheckedChanged += OnRadioMetodoCheckedChanged;
+            if (RadioTransfer != null) RadioTransfer.CheckedChanged += OnRadioMetodoCheckedChanged;
+            if (RadioEfectivo != null) RadioEfectivo.CheckedChanged += OnRadioMetodoCheckedChanged;
+
             // 2. Configuración por defecto del Campus y ETA
             PickerCampus.SelectedIndex = 0; // UdlaPark por defecto
             UpdateEstimatedTime();
@@ -30,6 +36,21 @@ namespace AlVueloUsers.Views
 
             // 5. Configurar visuales iniciales de servicios
             SetupInitialServicios();
+
+            // 6. Configurar estado inicial de métodos de pago
+            UpdatePaymentMethodsAvailability();
+
+            // 7. Inicializar envio en $0.00
+            if (LabelEnvioAmount != null)
+                LabelEnvioAmount.Text = "$0.00";
+
+            UpdateEnvioAmountForService();
+
+            // Forzar la selección visual inicial de la Tarjeta
+            if (GridMetodo_Tarjeta != null)
+            {
+                OnMetodoPagoSelected(GridMetodo_Tarjeta, EventArgs.Empty);
+            }
         }
 
         private void SetupInitialServicios()
@@ -169,6 +190,12 @@ namespace AlVueloUsers.Views
             ApplyServicioSelectedVisuals(border);
             _servicioSeleccionadoActual = border;
 
+            // Actualizar disponibilidad de métodos de pago según el servicio seleccionado
+            UpdatePaymentMethodsAvailability();
+
+            // Si el servicio es Campus, actualizar el label de envío
+            UpdateEnvioAmountForService();
+
             // Animación de clic
             await border.ScaleTo(0.98, 50);
             await border.ScaleTo(1.0, 50);
@@ -181,19 +208,29 @@ namespace AlVueloUsers.Views
             var layout = sender as VisualElement;
             if (layout == null) return;
 
-            // Feedback de oscurecimiento (Hover)
-            layout.BackgroundColor = Color.FromArgb("#F7F7F7");
+            // 1. Si el layout está deshabilitado (como Deuna en Campus), no hacer nada
+            if (layout.Opacity < 1.0) return;
 
+            // 2. Gestión de selección previa
             if (_metodoPagoSeleccionadoActual != null && _metodoPagoSeleccionadoActual != layout)
             {
                 ResetMetodoPagoVisuals(_metodoPagoSeleccionadoActual);
+                UncheckRadioOfElement(_metodoPagoSeleccionadoActual);
             }
 
+            // 3. Aplicar visuales y Check al Radio correspondiente
             ApplyMetodoPagoSelectedVisuals(layout);
+            CheckRadioOfElement(layout);
             _metodoPagoSeleccionadoActual = layout;
 
+            // 4. Animación de feedback táctil (Scale)
             await layout.ScaleTo(0.98, 50);
             await layout.ScaleTo(1.0, 50);
+
+            // Debug del parámetro seleccionado
+            var tapped = e as TappedEventArgs;
+            string metodo = tapped?.Parameter?.ToString() ?? "Manual";
+            System.Diagnostics.Debug.WriteLine($"Seleccionado: {metodo}");
         }
 
         private void ResetMetodoPagoVisuals(VisualElement element)
@@ -204,7 +241,7 @@ namespace AlVueloUsers.Views
 
         private void ApplyMetodoPagoSelectedVisuals(VisualElement element)
         {
-            var red = GetAppColor("AlVueloRed", Colors.Red);
+            var red = GetAppColor("AlVueloRed", Colors.Grey);
             SetMetodoVisuals(element, red, red);
         }
 
@@ -215,6 +252,108 @@ namespace AlVueloUsers.Views
             else if (element == GridMetodo_Transfer) { LabelTransfer.TextColor = textColor; BorderIcon_Transfer.Stroke = borderIconColor; }
             else if (element == GridMetodo_Efectivo) { LabelEfectivo.TextColor = textColor; BorderIcon_Efectivo.Stroke = borderIconColor; }
             else if (element == GridMetodo_Agregar) { LabelAgregar.TextColor = textColor; BorderIcon_Agregar.Stroke = borderIconColor; }
+        }
+
+        private void UncheckRadioOfElement(VisualElement element)
+        {
+            if (element == GridMetodo_Tarjeta) { if (RadioTarjeta != null) RadioTarjeta.IsChecked = false; }
+            else if (element == GridMetodo_Deuna) { if (RadioDeuna != null) RadioDeuna.IsChecked = false; }
+            else if (element == GridMetodo_Transfer) { if (RadioTransfer != null) RadioTransfer.IsChecked = false; }
+            else if (element == GridMetodo_Efectivo) { if (RadioEfectivo != null) RadioEfectivo.IsChecked = false; }
+            // Agregar no tiene radio
+        }
+
+        private void CheckRadioOfElement(VisualElement element)
+        {
+            if (element == GridMetodo_Tarjeta) { if (RadioTarjeta != null) RadioTarjeta.IsChecked = true; }
+            else if (element == GridMetodo_Deuna) { if (RadioDeuna != null) RadioDeuna.IsChecked = true; }
+            else if (element == GridMetodo_Transfer) { if (RadioTransfer != null) RadioTransfer.IsChecked = true; }
+            else if (element == GridMetodo_Efectivo) { if (RadioEfectivo != null) RadioEfectivo.IsChecked = true; }
+        }
+
+        private void UpdatePaymentMethodsAvailability()
+        {
+            // Por defecto, deshabilitar Deuna y Transfer
+            bool allowDeunaTransfer = false;
+
+            if (_servicioSeleccionadoActual != null)
+            {
+                if (_servicioSeleccionadoActual == BorderRetiro || _servicioSeleccionadoActual == BorderConsumo)
+                {
+                    allowDeunaTransfer = true;
+                }
+            }
+
+            // Establecer IsEnabled y opacidad para indicar disponibilidad
+            if (RadioDeuna != null) RadioDeuna.IsEnabled = allowDeunaTransfer;
+            var gDeunaObj = this.FindByName("GridMetodo_Deuna");
+            var gDeuna = gDeunaObj as Grid;
+            if (gDeuna != null) gDeuna.Opacity = allowDeunaTransfer ? 1.0 : 0.5;
+
+            if (RadioTransfer != null) RadioTransfer.IsEnabled = allowDeunaTransfer;
+            var gTransferObj = this.FindByName("GridMetodo_Transfer");
+            var gTransfer = gTransferObj as Grid;
+            if (gTransfer != null) gTransfer.Opacity = allowDeunaTransfer ? 1.0 : 0.5;
+
+            // Si método seleccionado actualmente no está disponible, resetear selección a tarjeta por defecto
+            if (!allowDeunaTransfer && (_metodoPagoSeleccionadoActual == GridMetodo_Deuna || _metodoPagoSeleccionadoActual == GridMetodo_Transfer))
+            {
+                ResetMetodoPagoVisuals(_metodoPagoSeleccionadoActual);
+                UncheckRadioOfElement(_metodoPagoSeleccionadoActual);
+                _metodoPagoSeleccionadoActual = null;
+                // Seleccionar Tarjeta por defecto
+                OnMetodoPagoSelected(GridMetodo_Tarjeta, EventArgs.Empty);
+            }
+        }
+
+        private void UpdateEnvioAmountForService()
+        {
+            // If LabelEnvioAmount generated in partial class, use it; otherwise try FindByName
+            var envioObj = this.FindByName("LabelEnvioAmount");
+            var envio = envioObj as Label;
+            if (envio != null)
+            {
+                if (_servicioSeleccionadoActual == BorderCampus)
+                    envio.Text = "$0.50";
+                else
+                    envio.Text = "$0.00";
+            }
+            else if (LabelEnvioAmount != null)
+            {
+                LabelEnvioAmount.Text = _servicioSeleccionadoActual == BorderCampus ? "$0.50" : "$0.00";
+            }
+        }
+
+        private void OnRadioMetodoCheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            if (!e.Value) return; // solo manejar cuando se chequea
+
+            var rb = sender as RadioButton;
+            if (rb == null) return;
+
+            if (RadioTarjeta != null && rb == RadioTarjeta)
+            {
+                OnMetodoPagoSelected(GridMetodo_Tarjeta, EventArgs.Empty);
+                return;
+            }
+
+            if (RadioDeuna != null && rb == RadioDeuna && (RadioDeuna.IsEnabled))
+            {
+                OnMetodoPagoSelected(GridMetodo_Deuna, EventArgs.Empty);
+                return;
+            }
+
+            if (RadioTransfer != null && rb == RadioTransfer && (RadioTransfer.IsEnabled))
+            {
+                OnMetodoPagoSelected(GridMetodo_Transfer, EventArgs.Empty);
+                return;
+            }
+
+            if (RadioEfectivo != null && rb == RadioEfectivo)
+            {
+                OnMetodoPagoSelected(GridMetodo_Efectivo, EventArgs.Empty);
+                return;
+            }
         }
     }
 }

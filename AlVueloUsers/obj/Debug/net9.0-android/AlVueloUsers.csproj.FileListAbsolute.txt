@@ -997,3 +997,4 @@ C:\Users\saril\Desktop\progra4\AlVueloUsers\AlVueloUsers\obj\Debug\net9.0-androi
 C:\Users\saril\Desktop\progra4\AlVueloUsers\AlVueloUsers\obj\Debug\net9.0-android\stamp\_GenerateJavaStubs.stamp
 C:\Users\saril\Desktop\progra4\AlVueloUsers\AlVueloUsers\obj\Debug\net9.0-android\stamp\_GeneratePackageManagerJava.stamp
 C:\Users\saril\Desktop\progra4\AlVueloUsers\AlVueloUsers\obj\Debug\net9.0-android\stamp\_ResolveLibraryProjectImports.stamp
+C:\Users\saril\Desktop\progra4\AlVueloUsers\AlVueloUsers\obj\Debug\net9.0-android\AlVueloUsers.sourcelink.json
