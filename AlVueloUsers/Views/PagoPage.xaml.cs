@@ -1,5 +1,6 @@
 using AlVueloUsers.Data;
 using AlVueloUsers.Models;
+using AlVueloUsers.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Maui.Controls;
 
@@ -355,5 +356,121 @@ namespace AlVueloUsers.Views
                 return;
             }
         }
+
+        private async void OnPagarClicked(object sender, EventArgs e)
+        {
+            // 1. Validación rápida
+            if (_metodoPagoSeleccionadoActual == null)
+            {
+                await DisplayAlert("Error", "Selecciona un método de pago.", "OK");
+                return;
+            }
+
+            // --- ESTADO DE CARGA (UX) ---
+            // Guardamos el texto original para restaurarlo si falla
+            string textoOriginal = BtnPagar.Text;
+
+            // Cambios visuales en el botón
+            BtnPagar.Text = "";              // Ocultar texto "Pagar"
+            BtnPagar.IsEnabled = false;      // Evitar doble clic
+            SpinnerCarga.IsVisible = true;   // Mostrar ruedita
+            SpinnerCarga.IsRunning = true;   // Girar ruedita
+                                             // ----------------------------
+
+            try
+            {
+                bool pagoAprobado = false;
+
+                if (_metodoPagoSeleccionadoActual == GridMetodo_Tarjeta)
+                {
+                    // Lógica de PayPal (Tu código ya corregido)
+                    var tarjetaInfo = await ObtenerTarjetaParaPago("C001");
+                    if (tarjetaInfo != null)
+                    {
+                        var servicio = new PayPalService();
+                        var resultado = await servicio.ProcesarPago(7.54m, tarjetaInfo.NumTarjeta, tarjetaInfo.FechaExpiracion, tarjetaInfo.Cvv, tarjetaInfo.NombreTitular);
+
+                        if (resultado.Exito)
+                        {
+                            pagoAprobado = true;
+                            await RegistrarPedidoEnBD("Pagado (PayPal)");
+                        }
+                        else
+                        {
+                            await DisplayAlert("Error", resultado.Mensaje, "OK");
+                        }
+                    }
+                }
+                else
+                {
+                    // Efectivo / Transferencia
+                    pagoAprobado = true; // Asumimos éxito inmediato para estos métodos
+                    await RegistrarPedidoEnBD("Pendiente de pago");
+                }
+
+                // --- NAVEGACIÓN A LA ANIMACIÓN ---
+                if (pagoAprobado)
+                {
+                    // Aquí es donde vamos a la pantalla 'Preciosa' de Lottie
+                    // Usamos MainPager para borrar el historial y que no puedan volver atrás
+                    await Navigation.PushModalAsync(new PagoExitosoPage());
+                }
+                else
+                {
+                    // Si falló (y no entró al if de arriba), restauramos el botón en el 'finally'
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
+            finally
+            {
+                // Solo restauramos el botón si NO nos fuimos de la página (es decir, si hubo error)
+                // Verificamos si seguimos en esta pantalla para evitar errores visuales
+                if (Application.Current.MainPage is not NavigationPage nav || nav.CurrentPage is PagoPage)
+                {
+                    BtnPagar.Text = textoOriginal; // "Pagar $7.54"
+                    BtnPagar.IsEnabled = true;
+                    SpinnerCarga.IsVisible = false;
+                    SpinnerCarga.IsRunning = false;
+                }
+            }
+        }
+
+        // Método auxiliar para obtener el objeto Tarjeta completo (incluido CVV)
+        private async Task<Tarjeta> ObtenerTarjetaParaPago(string clienteId)
+        {
+            using (var db = new AlVueloDbContext())
+            {
+                // Hacemos el JOIN igual que en tu método de carga, pero devolvemos todo el objeto
+                return await (from ct in db.Set<ClienteTarjeta>()
+                              join t in db.Tarjetas on ct.NumTarjeta equals t.NumTarjeta
+                              where ct.ClienteId == clienteId
+                              select t).FirstOrDefaultAsync();
+            }
+        }
+
+        // CAMBIA 'void' por 'Task'
+        private async Task RegistrarPedidoEnBD(string estadoFinal)
+        {
+            using (var db = new AlVueloDbContext())
+            {
+                var nuevoPedido = new Pedido
+                {
+                    ClienteId = "C001",
+                    RestauranteId = "UPO1",
+                    Total = 7.54m,
+                    Estado = "Pendiente",
+                    TipoServicio = $"Entrega campus ({PickerCampus.SelectedItem})",
+                    MetodoPago = estadoFinal
+                };
+
+                db.Pedidos.Add(nuevoPedido);
+                db.SaveChanges();
+            }
+        }
+
+
     }
 }

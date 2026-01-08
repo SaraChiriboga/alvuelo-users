@@ -1,0 +1,459 @@
+﻿using AlVueloUsers.Data;
+using AlVueloUsers.Models;
+using AlVueloUsers.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Maui.Controls;
+
+namespace AlVueloUsers.Views
+{
+    public partial class PagoPage : ContentPage
+    {
+        // Variables para rastrear selecciones actuales
+        private Border _servicioSeleccionadoActual;
+        private VisualElement _metodoPagoSeleccionadoActual;
+
+        public PagoPage()
+        {
+            InitializeComponent();
+
+            // 1. Ocultar la navegación nativa
+            NavigationPage.SetHasNavigationBar(this, false);
+
+            // subscribe radio events if present (generated fields from XAML)
+            if (RadioTarjeta != null) RadioTarjeta.CheckedChanged += OnRadioMetodoCheckedChanged;
+            if (RadioDeuna != null) RadioDeuna.CheckedChanged += OnRadioMetodoCheckedChanged;
+            if (RadioTransfer != null) RadioTransfer.CheckedChanged += OnRadioMetodoCheckedChanged;
+            if (RadioEfectivo != null) RadioEfectivo.CheckedChanged += OnRadioMetodoCheckedChanged;
+
+            // 2. Configuración por defecto del Campus y ETA
+            PickerCampus.SelectedIndex = 0; // UdlaPark por defecto
+            UpdateEstimatedTime();
+
+            // 3. Suscribirse al evento de cambio de campus
+            PickerCampus.SelectedIndexChanged += OnCampusChanged;
+
+            // 4. Cargar datos de SQL (Servidor SARILOLA)
+            CargarTarjetaDesdeBD();
+
+            // 5. Configurar visuales iniciales de servicios
+            SetupInitialServicios();
+
+            // 6. Configurar estado inicial de métodos de pago
+            UpdatePaymentMethodsAvailability();
+
+            // 7. Inicializar envio en $0.00
+            if (LabelEnvioAmount != null)
+                LabelEnvioAmount.Text = "$0.00";
+
+            UpdateEnvioAmountForService();
+
+            // Forzar la selección visual inicial de la Tarjeta
+            if (GridMetodo_Tarjeta != null)
+            {
+                OnMetodoPagoSelected(GridMetodo_Tarjeta, EventArgs.Empty);
+            }
+        }
+
+        private void SetupInitialServicios()
+        {
+            var campus = this.FindByName<Border>("BorderCampus");
+            var retiro = this.FindByName<Border>("BorderRetiro");
+            var consumo = this.FindByName<Border>("BorderConsumo");
+
+            ResetServicioVisuals(campus);
+            ResetServicioVisuals(retiro);
+            ResetServicioVisuals(consumo);
+
+            // Seleccionar Campus por defecto visualmente
+            if (campus != null)
+            {
+                ApplyServicioSelectedVisuals(campus);
+                _servicioSeleccionadoActual = campus;
+            }
+        }
+
+        private void OnCampusChanged(object sender, EventArgs e)
+        {
+            UpdateEstimatedTime();
+        }
+
+        private void UpdateEstimatedTime()
+        {
+            if (PickerCampus.SelectedItem == null) return;
+
+            string selectedCampus = PickerCampus.SelectedItem.ToString();
+
+            // Actualización del LabelTiempoEstimado según el campus seleccionado
+            switch (selectedCampus)
+            {
+                case "UdlaPark":
+                    LabelTiempoEstimado.Text = "15 - 20 mins";
+                    break;
+                case "Granados":
+                    LabelTiempoEstimado.Text = "25 - 35 mins";
+                    break;
+                case "Colón":
+                    LabelTiempoEstimado.Text = "40 - 50 mins";
+                    break;
+                default:
+                    LabelTiempoEstimado.Text = "Calculando...";
+                    break;
+            }
+        }
+
+        private async void CargarTarjetaDesdeBD()
+        {
+            try
+            {
+                using (var db = new AlVueloDbContext())
+                {
+                    // Consulta con Join entre Cliente_Tarjeta y Tarjeta para Ana Martínez (C001)
+                    var tarjetaInfo = await (from ct in db.Set<ClienteTarjeta>()
+                                             join t in db.Tarjetas on ct.NumTarjeta equals t.NumTarjeta
+                                             where ct.ClienteId == "C001"
+                                             select t).FirstOrDefaultAsync();
+
+                    if (tarjetaInfo != null && !string.IsNullOrEmpty(tarjetaInfo.NumTarjeta))
+                    {
+                        string ultimosCuatro = tarjetaInfo.NumTarjeta.Substring(tarjetaInfo.NumTarjeta.Length - 4);
+                        LabelNombreTarjeta.Text = $"Mi Tarjeta •••• {ultimosCuatro}";
+
+                        if (tarjetaInfo.NumTarjeta.StartsWith("4"))
+                        {
+                            ActualizarIconoVisa();
+                        }
+                    }
+                    else
+                    {
+                        LabelNombreTarjeta.Text = "No tienes tarjetas vinculadas";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error SQL: {ex.Message}");
+                LabelNombreTarjeta.Text = "Error al conectar con el servidor";
+            }
+        }
+
+        private void ActualizarIconoVisa()
+        {
+            if (IconoTarjeta.Source is FontImageSource source)
+            {
+                source.Glyph = "\uf1f0";
+                source.Color = Color.FromArgb("#1A1F71");
+            }
+        }
+
+        // --- MÉTODOS VISUALES DE SERVICIO ---
+
+        private void ResetServicioVisuals(Border b)
+        {
+            if (b == null) return;
+            b.Stroke = new SolidColorBrush(Color.FromArgb("#E0E0E0"));
+            b.StrokeThickness = 1;
+            b.BackgroundColor = Colors.White;
+        }
+
+        private Color GetAppColor(string key, Color fallback)
+        {
+            var appResources = Application.Current?.Resources;
+            if (appResources != null && appResources.ContainsKey(key) && appResources[key] is Color c)
+                return c;
+            return fallback;
+        }
+
+        private void ApplyServicioSelectedVisuals(Border b)
+        {
+            if (b == null) return;
+            var red = GetAppColor("AlVueloRed", Colors.Red);
+            b.Stroke = new SolidColorBrush(red);
+            b.StrokeThickness = 1;
+            b.BackgroundColor = Colors.White;
+        }
+
+        private async void OnServicioSelected(object sender, EventArgs e)
+        {
+            Border border = sender as Border;
+            if (border == null) return;
+
+            // Feedback de oscurecimiento (Hover)
+            var originalColor = border.BackgroundColor;
+            border.BackgroundColor = Color.FromArgb("#F0F0F0");
+            await Task.Delay(100);
+            border.BackgroundColor = originalColor;
+
+            if (_servicioSeleccionadoActual != null && _servicioSeleccionadoActual != border)
+            {
+                ResetServicioVisuals(_servicioSeleccionadoActual);
+            }
+
+            ApplyServicioSelectedVisuals(border);
+            _servicioSeleccionadoActual = border;
+
+            // Actualizar disponibilidad de métodos de pago según el servicio seleccionado
+            UpdatePaymentMethodsAvailability();
+
+            // Si el servicio es Campus, actualizar el label de envío
+            UpdateEnvioAmountForService();
+
+            // Animación de clic
+            await border.ScaleTo(0.98, 50);
+            await border.ScaleTo(1.0, 50);
+        }
+
+        // --- MÉTODOS VISUALES DE PAGO ---
+
+        private async void OnMetodoPagoSelected(object sender, EventArgs e)
+        {
+            var layout = sender as VisualElement;
+            if (layout == null) return;
+
+            // 1. Si el layout está deshabilitado (como Deuna en Campus), no hacer nada
+            if (layout.Opacity < 1.0) return;
+
+            // 2. Gestión de selección previa
+            if (_metodoPagoSeleccionadoActual != null && _metodoPagoSeleccionadoActual != layout)
+            {
+                ResetMetodoPagoVisuals(_metodoPagoSeleccionadoActual);
+                UncheckRadioOfElement(_metodoPagoSeleccionadoActual);
+            }
+
+            // 3. Aplicar visuales y Check al Radio correspondiente
+            ApplyMetodoPagoSelectedVisuals(layout);
+            CheckRadioOfElement(layout);
+            _metodoPagoSeleccionadoActual = layout;
+
+            // 4. Animación de feedback táctil (Scale)
+            await layout.ScaleTo(0.98, 50);
+            await layout.ScaleTo(1.0, 50);
+
+            // Debug del parámetro seleccionado
+            var tapped = e as TappedEventArgs;
+            string metodo = tapped?.Parameter?.ToString() ?? "Manual";
+            System.Diagnostics.Debug.WriteLine($"Seleccionado: {metodo}");
+        }
+
+        private void ResetMetodoPagoVisuals(VisualElement element)
+        {
+            var textSecondary = GetAppColor("TextSecondary", Colors.Gray);
+            SetMetodoVisuals(element, textSecondary, Colors.Transparent);
+        }
+
+        private void ApplyMetodoPagoSelectedVisuals(VisualElement element)
+        {
+            var red = GetAppColor("AlVueloRed", Colors.Grey);
+            SetMetodoVisuals(element, red, red);
+        }
+
+        private void SetMetodoVisuals(VisualElement element, Color textColor, Color borderIconColor)
+        {
+            if (element == GridMetodo_Tarjeta) { LabelNombreTarjeta.TextColor = textColor; BorderIcon_Tarjeta.Stroke = borderIconColor; }
+            else if (element == GridMetodo_Deuna) { LabelDeuna.TextColor = textColor; BorderIcon_Deuna.Stroke = borderIconColor; }
+            else if (element == GridMetodo_Transfer) { LabelTransfer.TextColor = textColor; BorderIcon_Transfer.Stroke = borderIconColor; }
+            else if (element == GridMetodo_Efectivo) { LabelEfectivo.TextColor = textColor; BorderIcon_Efectivo.Stroke = borderIconColor; }
+            else if (element == GridMetodo_Agregar) { LabelAgregar.TextColor = textColor; BorderIcon_Agregar.Stroke = borderIconColor; }
+        }
+
+        private void UncheckRadioOfElement(VisualElement element)
+        {
+            if (element == GridMetodo_Tarjeta) { if (RadioTarjeta != null) RadioTarjeta.IsChecked = false; }
+            else if (element == GridMetodo_Deuna) { if (RadioDeuna != null) RadioDeuna.IsChecked = false; }
+            else if (element == GridMetodo_Transfer) { if (RadioTransfer != null) RadioTransfer.IsChecked = false; }
+            else if (element == GridMetodo_Efectivo) { if (RadioEfectivo != null) RadioEfectivo.IsChecked = false; }
+            // Agregar no tiene radio
+        }
+
+        private void CheckRadioOfElement(VisualElement element)
+        {
+            if (element == GridMetodo_Tarjeta) { if (RadioTarjeta != null) RadioTarjeta.IsChecked = true; }
+            else if (element == GridMetodo_Deuna) { if (RadioDeuna != null) RadioDeuna.IsChecked = true; }
+            else if (element == GridMetodo_Transfer) { if (RadioTransfer != null) RadioTransfer.IsChecked = true; }
+            else if (element == GridMetodo_Efectivo) { if (RadioEfectivo != null) RadioEfectivo.IsChecked = true; }
+        }
+
+        private void UpdatePaymentMethodsAvailability()
+        {
+            // Por defecto, deshabilitar Deuna y Transfer
+            bool allowDeunaTransfer = false;
+
+            if (_servicioSeleccionadoActual != null)
+            {
+                if (_servicioSeleccionadoActual == BorderRetiro || _servicioSeleccionadoActual == BorderConsumo)
+                {
+                    allowDeunaTransfer = true;
+                }
+            }
+
+            // Establecer IsEnabled y opacidad para indicar disponibilidad
+            if (RadioDeuna != null) RadioDeuna.IsEnabled = allowDeunaTransfer;
+            var gDeunaObj = this.FindByName("GridMetodo_Deuna");
+            var gDeuna = gDeunaObj as Grid;
+            if (gDeuna != null) gDeuna.Opacity = allowDeunaTransfer ? 1.0 : 0.5;
+
+            if (RadioTransfer != null) RadioTransfer.IsEnabled = allowDeunaTransfer;
+            var gTransferObj = this.FindByName("GridMetodo_Transfer");
+            var gTransfer = gTransferObj as Grid;
+            if (gTransfer != null) gTransfer.Opacity = allowDeunaTransfer ? 1.0 : 0.5;
+
+            // Si método seleccionado actualmente no está disponible, resetear selección a tarjeta por defecto
+            if (!allowDeunaTransfer && (_metodoPagoSeleccionadoActual == GridMetodo_Deuna || _metodoPagoSeleccionadoActual == GridMetodo_Transfer))
+            {
+                ResetMetodoPagoVisuals(_metodoPagoSeleccionadoActual);
+                UncheckRadioOfElement(_metodoPagoSeleccionadoActual);
+                _metodoPagoSeleccionadoActual = null;
+                // Seleccionar Tarjeta por defecto
+                OnMetodoPagoSelected(GridMetodo_Tarjeta, EventArgs.Empty);
+            }
+        }
+
+        private void UpdateEnvioAmountForService()
+        {
+            // If LabelEnvioAmount generated in partial class, use it; otherwise try FindByName
+            var envioObj = this.FindByName("LabelEnvioAmount");
+            var envio = envioObj as Label;
+            if (envio != null)
+            {
+                if (_servicioSeleccionadoActual == BorderCampus)
+                    envio.Text = "$0.50";
+                else
+                    envio.Text = "$0.00";
+            }
+            else if (LabelEnvioAmount != null)
+            {
+                LabelEnvioAmount.Text = _servicioSeleccionadoActual == BorderCampus ? "$0.50" : "$0.00";
+            }
+        }
+
+        private void OnRadioMetodoCheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            if (!e.Value) return; // solo manejar cuando se chequea
+
+            var rb = sender as RadioButton;
+            if (rb == null) return;
+
+            if (RadioTarjeta != null && rb == RadioTarjeta)
+            {
+                OnMetodoPagoSelected(GridMetodo_Tarjeta, EventArgs.Empty);
+                return;
+            }
+
+            if (RadioDeuna != null && rb == RadioDeuna && (RadioDeuna.IsEnabled))
+            {
+                OnMetodoPagoSelected(GridMetodo_Deuna, EventArgs.Empty);
+                return;
+            }
+
+            if (RadioTransfer != null && rb == RadioTransfer && (RadioTransfer.IsEnabled))
+            {
+                OnMetodoPagoSelected(GridMetodo_Transfer, EventArgs.Empty);
+                return;
+            }
+
+            if (RadioEfectivo != null && rb == RadioEfectivo)
+            {
+                OnMetodoPagoSelected(GridMetodo_Efectivo, EventArgs.Empty);
+                return;
+            }
+        }
+
+        // Dentro de PagoPage.xaml.cs
+
+        private async void OnPagarClicked(object sender, EventArgs e)
+        {
+            // 1. Validación de selección
+            if (_metodoPagoSeleccionadoActual == null)
+            {
+                await DisplayAlert("Error", "Por favor selecciona un método de pago.", "OK");
+                return;
+            }
+
+            // 2. Si el método es Tarjeta, procesamos con Stripe
+            if (_metodoPagoSeleccionadoActual == GridMetodo_Tarjeta)
+            {
+                await ProcesarPagoConStripe();
+            }
+            else
+            {
+                // Lógica para Efectivo, Deuna o Transferencia
+                await RegistrarPedidoEnBD("Pendiente de verificación");
+            }
+        }
+
+        private async Task ProcesarPagoConStripe()
+        {
+            // 1. Mostrar pantalla de carga
+            LoadingOverlay.IsVisible = true;
+
+            try
+            {
+                using (var db = new AlVueloDbContext())
+                {
+                    // Forma simplificada que EF Core traduce sin problemas
+                    var tarjeta = await (from ct in db.ClientesTarjetas // Usa la propiedad DbSet directamente
+                                         join t in db.Tarjetas on ct.NumTarjeta equals t.NumTarjeta
+                                         where ct.ClienteId == "C001"
+                                         select t).FirstOrDefaultAsync();
+
+                    if (tarjeta == null) throw new Exception("No se encontró una tarjeta vinculada.");
+
+                    // 2. Conectar con Stripe
+                    var stripeService = new StripeService();
+                    string token = await stripeService.CrearTokenTarjeta(tarjeta);
+
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        await RegistrarPedidoEnBD("Pagado (Stripe)");
+                        await DisplayAlert("Pago Exitoso", "¡Pedido registrado correctamente!", "Aceptar");
+                    }
+                    else
+                    {
+                        // Esto se ejecuta si CrearTokenTarjeta devuelve null por un catch interno
+                        throw new Exception("No se pudo generar el token de seguridad.");
+                    }
+                }
+            }
+            // --- NUEVO BLOQUE DE DIAGNÓSTICO PARA STRIPE ---
+            catch (Stripe.StripeException sEx)
+            {
+                // Esto te dirá exactamente qué dijo Stripe (ej: "Your card was declined")
+                string mensajeStripe = sEx.StripeError?.Message ?? "Error desconocido en Stripe";
+                await DisplayAlert("Error de Stripe", mensajeStripe, "Entendido");
+
+                System.Diagnostics.Debug.WriteLine($"Error Técnico Stripe: {sEx.StripeError?.Code}");
+            }
+            // ----------------------------------------------
+            catch (Exception ex)
+            {
+                // Errores de base de datos o de lógica C# (ej: el Split de la fecha falló)
+                await DisplayAlert("Error de Aplicación", $"Detalle: {ex.Message}", "Reintentar");
+            }
+            finally
+            {
+                LoadingOverlay.IsVisible = false;
+            }
+        }
+
+        // CAMBIA 'void' por 'Task'
+        private async Task RegistrarPedidoEnBD(string estadoFinal)
+        {
+            using (var db = new AlVueloDbContext())
+            {
+                var nuevoPedido = new Pedido
+                {
+                    ClienteId = "C001",
+                    RestauranteId = "UPO1",
+                    Total = 7.54m,
+                    Estado = "Pendiente",
+                    TipoServicio = $"Entrega campus ({PickerCampus.SelectedItem})",
+                    MetodoPago = estadoFinal
+                };
+
+                db.Pedidos.Add(nuevoPedido);
+                await db.SaveChangesAsync();
+
+                await DisplayAlert("AlVuelo", "¡Pedido realizado con éxito!", "OK");
+            }
+        }
+    }
+}

@@ -85,9 +85,9 @@
               "version": "[9.0.11, )",
               "autoReferenced": true
             },
-            "Stripe.net": {
+            "SkiaSharp.Extended.UI.Maui": {
               "target": "Package",
-              "version": "[50.1.0, )"
+              "version": "[3.0.0, )"
             }
           },
           "imports": [
@@ -132,9 +132,9 @@
               "version": "[9.0.11, )",
               "autoReferenced": true
             },
-            "Stripe.net": {
+            "SkiaSharp.Extended.UI.Maui": {
               "target": "Package",
-              "version": "[50.1.0, )"
+              "version": "[3.0.0, )"
             }
           },
           "imports": [
@@ -179,9 +179,9 @@
               "version": "[9.0.11, )",
               "autoReferenced": true
             },
-            "Stripe.net": {
+            "SkiaSharp.Extended.UI.Maui": {
               "target": "Package",
-              "version": "[50.1.0, )"
+              "version": "[3.0.0, )"
             }
           },
           "imports": [
@@ -221,9 +221,9 @@
               "target": "Package",
               "version": "[9.0.111, )"
             },
-            "Stripe.net": {
+            "SkiaSharp.Extended.UI.Maui": {
               "target": "Package",
-              "version": "[50.1.0, )"
+              "version": "[3.0.0, )"
             }
           },
           "imports": [

@@ -1,3 +1,10 @@
+Font Awesome 7 Brands-Regular-400.otf
+Font Awesome 7 Free-Regular-400.otf
+Font Awesome 7 Free-Solid-900.otf
+Inter-Italic-Variable.ttf
+Inter-Variable.ttf
+OpenSans-Regular.ttf
+OpenSans-Semibold.ttf
 appicon.ico
 appiconLargeTile.scale-100.png
 appiconLargeTile.scale-125.png
@@ -54,4 +61,10 @@ dotnet_bot.scale-125.png
 dotnet_bot.scale-150.png
 dotnet_bot.scale-200.png
 dotnet_bot.scale-400.png
+splashSplashScreen.scale-100.png
+splashSplashScreen.scale-125.png
+splashSplashScreen.scale-150.png
+splashSplashScreen.scale-200.png
+splashSplashScreen.scale-400.png
 AboutAssets.txt
+success-delivery.json

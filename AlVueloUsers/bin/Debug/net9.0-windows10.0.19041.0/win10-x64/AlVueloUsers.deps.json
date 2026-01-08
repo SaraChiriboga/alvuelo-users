@@ -12,7 +12,7 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.11",
           "Microsoft.Extensions.Logging.Debug": "9.0.8",
           "Microsoft.Maui.Controls": "9.0.111",
-          "Stripe.net": "50.1.0",
+          "SkiaSharp.Extended.UI.Maui": "3.0.0",
           "Microsoft.Maui.Controls.HotReload.Forms": "17.0.0.0",
           "Microsoft.VisualStudio.DesignTools.MobileTapContracts": "17.0.0.0",
           "Microsoft.VisualStudio.DesignTools.TapContract": "17.0.0.0",
@@ -60,7 +60,7 @@
           "Microsoft.Identity.Client": "4.61.3",
           "Microsoft.Identity.Client.Extensions.Msal": "4.61.3",
           "System.Memory": "4.5.4",
-          "System.Security.Cryptography.ProtectedData": "9.0.0",
+          "System.Security.Cryptography.ProtectedData": "6.0.0",
           "System.Text.Json": "9.0.11",
           "System.Threading.Tasks.Extensions": "4.5.4"
         },
@@ -88,7 +88,7 @@
           "Microsoft.IdentityModel.JsonWebTokens": "6.35.0",
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.35.0",
           "Microsoft.SqlServer.Server": "1.0.0",
-          "System.Configuration.ConfigurationManager": "9.0.0",
+          "System.Configuration.ConfigurationManager": "6.0.1",
           "System.Diagnostics.DiagnosticSource": "6.0.1",
           "System.Runtime.Caching": "6.0.0",
           "System.Security.Cryptography.Cng": "5.0.0",
@@ -320,7 +320,7 @@
       "Microsoft.Identity.Client.Extensions.Msal/4.61.3": {
         "dependencies": {
           "Microsoft.Identity.Client": "4.61.3",
-          "System.Security.Cryptography.ProtectedData": "9.0.0"
+          "System.Security.Cryptography.ProtectedData": "6.0.0"
         },
         "runtime": {
           "lib/net6.0/Microsoft.Identity.Client.Extensions.Msal.dll": {
@@ -419,6 +419,20 @@
         "dependencies": {
           "Microsoft.Maui.Controls.Core": "9.0.111",
           "Microsoft.Maui.Controls.Xaml": "9.0.111"
+        }
+      },
+      "Microsoft.Maui.Controls.Compatibility/9.0.82": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "9.0.8",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.11",
+          "Microsoft.Maui.Controls.Core": "9.0.111",
+          "Microsoft.Maui.Controls.Xaml": "9.0.111"
+        },
+        "runtime": {
+          "lib/net9.0-windows10.0.19041/Microsoft.Maui.Controls.Compatibility.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "9.0.8225.35901"
+          }
         }
       },
       "Microsoft.Maui.Controls.Core/9.0.111": {
@@ -628,6 +642,14 @@
           }
         }
       },
+      "Microsoft.Win32.SystemEvents/6.0.0": {
+        "runtime": {
+          "runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
+          }
+        }
+      },
       "Microsoft.Windows.SDK.BuildTools/10.0.22621.756": {},
       "Microsoft.WindowsAppSDK/1.7.250606001": {
         "dependencies": {
@@ -745,14 +767,6 @@
           }
         }
       },
-      "Newtonsoft.Json/13.0.3": {
-        "runtime": {
-          "lib/net6.0/Newtonsoft.Json.dll": {
-            "assemblyVersion": "13.0.0.0",
-            "fileVersion": "13.0.3.27908"
-          }
-        }
-      },
       "runtime.any.System.Runtime/4.3.0": {
         "dependencies": {
           "System.Private.Uri": "4.3.0"
@@ -760,15 +774,152 @@
       },
       "runtime.any.System.Text.Encoding/4.3.0": {},
       "runtime.win7.System.Private.Uri/4.3.0": {},
-      "Stripe.net/50.1.0": {
+      "SkiaSharp/3.119.1": {
         "dependencies": {
-          "Newtonsoft.Json": "13.0.3",
-          "System.Configuration.ConfigurationManager": "9.0.0"
+          "SkiaSharp.NativeAssets.Win32": "3.119.1"
         },
         "runtime": {
-          "lib/net9.0/Stripe.net.dll": {
-            "assemblyVersion": "50.1.0.0",
-            "fileVersion": "50.1.0.0"
+          "lib/net8.0-windows10.0.19041/SkiaSharp.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.1.0"
+          }
+        }
+      },
+      "SkiaSharp.Extended/3.0.0": {
+        "dependencies": {
+          "SkiaSharp": "3.119.1"
+        },
+        "runtime": {
+          "lib/net9.0/SkiaSharp.Extended.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "SkiaSharp.Extended.UI.Maui/3.0.0": {
+        "dependencies": {
+          "Microsoft.Maui.Controls": "9.0.111",
+          "Microsoft.Maui.Controls.Compatibility": "9.0.82",
+          "SkiaSharp": "3.119.1",
+          "SkiaSharp.Extended": "3.0.0",
+          "SkiaSharp.Skottie": "3.119.1",
+          "SkiaSharp.Views.Maui.Controls": "3.119.1"
+        },
+        "runtime": {
+          "lib/net9.0-windows10.0.19041/SkiaSharp.Extended.UI.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "SkiaSharp.NativeAssets.Win32/3.119.1": {
+        "native": {
+          "runtimes/win-x64/native/libSkiaSharp.dll": {
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "SkiaSharp.NativeAssets.WinUI/3.119.1": {
+        "runtime": {
+          "runtimes/win-x64/lib/net8.0-windows10.0.19041.0/SkiaSharp.Views.WinUI.Native.Projection.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.1.0"
+          }
+        },
+        "native": {
+          "runtimes/win-x64/native/SkiaSharp.Views.WinUI.Native.dll": {
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/SkiaSharp.Views.WinUI.Native.winmd": {
+            "assemblyVersion": "255.255.255.255",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/libEGL.dll": {
+            "fileVersion": "2.1.1.0"
+          },
+          "runtimes/win-x64/native/libGLESv2.dll": {
+            "fileVersion": "2.1.1.0"
+          }
+        }
+      },
+      "SkiaSharp.Resources/3.119.1": {
+        "dependencies": {
+          "SkiaSharp": "3.119.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows10.0.19041/SkiaSharp.Resources.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.1.0"
+          }
+        }
+      },
+      "SkiaSharp.SceneGraph/3.119.1": {
+        "dependencies": {
+          "SkiaSharp": "3.119.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows10.0.19041/SkiaSharp.SceneGraph.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.1.0"
+          }
+        }
+      },
+      "SkiaSharp.Skottie/3.119.1": {
+        "dependencies": {
+          "SkiaSharp": "3.119.1",
+          "SkiaSharp.Resources": "3.119.1",
+          "SkiaSharp.SceneGraph": "3.119.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows10.0.19041/SkiaSharp.Skottie.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.1.0"
+          }
+        }
+      },
+      "SkiaSharp.Views/3.119.1": {
+        "dependencies": {
+          "SkiaSharp": "3.119.1"
+        }
+      },
+      "SkiaSharp.Views.Maui.Controls/3.119.1": {
+        "dependencies": {
+          "Microsoft.Maui.Controls": "9.0.111",
+          "Microsoft.Maui.Core": "9.0.111",
+          "SkiaSharp": "3.119.1",
+          "SkiaSharp.Views.Maui.Core": "3.119.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows10.0.19041/SkiaSharp.Views.Maui.Controls.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.1.0"
+          }
+        }
+      },
+      "SkiaSharp.Views.Maui.Core/3.119.1": {
+        "dependencies": {
+          "Microsoft.Maui.Core": "9.0.111",
+          "SkiaSharp": "3.119.1",
+          "SkiaSharp.Views": "3.119.1",
+          "SkiaSharp.Views.WinUI": "3.119.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows10.0.19041/SkiaSharp.Views.Maui.Core.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.1.0"
+          }
+        }
+      },
+      "SkiaSharp.Views.WinUI/3.119.1": {
+        "dependencies": {
+          "Microsoft.WindowsAppSDK": "1.7.250606001",
+          "SkiaSharp": "3.119.1",
+          "SkiaSharp.NativeAssets.WinUI": "3.119.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows10.0.19041/SkiaSharp.Views.Windows.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.1.0"
           }
         }
       },
@@ -784,15 +935,15 @@
           }
         }
       },
-      "System.Configuration.ConfigurationManager/9.0.0": {
+      "System.Configuration.ConfigurationManager/6.0.1": {
         "dependencies": {
-          "System.Diagnostics.EventLog": "9.0.0",
-          "System.Security.Cryptography.ProtectedData": "9.0.0"
+          "System.Security.Cryptography.ProtectedData": "6.0.0",
+          "System.Security.Permissions": "6.0.0"
         },
         "runtime": {
-          "lib/net9.0/System.Configuration.ConfigurationManager.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+          "lib/net6.0/System.Configuration.ConfigurationManager.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.922.41905"
           }
         }
       },
@@ -801,15 +952,14 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
       },
-      "System.Diagnostics.EventLog/9.0.0": {
+      "System.Drawing.Common/6.0.0": {
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "6.0.0"
+        },
         "runtime": {
-          "runtimes/win/lib/net9.0/System.Diagnostics.EventLog.Messages.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/win/lib/net9.0/System.Diagnostics.EventLog.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+          "runtimes/win/lib/net6.0/System.Drawing.Common.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
           }
         }
       },
@@ -856,7 +1006,7 @@
       },
       "System.Runtime.Caching/6.0.0": {
         "dependencies": {
-          "System.Configuration.ConfigurationManager": "9.0.0"
+          "System.Configuration.ConfigurationManager": "6.0.1"
         },
         "runtime": {
           "runtimes/win/lib/net6.0/System.Runtime.Caching.dll": {
@@ -866,16 +1016,29 @@
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
+      "System.Security.AccessControl/6.0.0": {},
       "System.Security.Cryptography.Cng/5.0.0": {
         "dependencies": {
           "System.Formats.Asn1": "9.0.11"
         }
       },
-      "System.Security.Cryptography.ProtectedData/9.0.0": {
+      "System.Security.Cryptography.ProtectedData/6.0.0": {
         "runtime": {
-          "lib/net9.0/System.Security.Cryptography.ProtectedData.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+          "runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
+          }
+        }
+      },
+      "System.Security.Permissions/6.0.0": {
+        "dependencies": {
+          "System.Security.AccessControl": "6.0.0",
+          "System.Windows.Extensions": "6.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/System.Security.Permissions.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
           }
         }
       },
@@ -900,6 +1063,17 @@
       },
       "System.Text.Json/9.0.11": {},
       "System.Threading.Tasks.Extensions/4.5.4": {},
+      "System.Windows.Extensions/6.0.0": {
+        "dependencies": {
+          "System.Drawing.Common": "6.0.0"
+        },
+        "runtime": {
+          "runtimes/win/lib/net6.0/System.Windows.Extensions.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
+          }
+        }
+      },
       "Microsoft.Maui.Controls.HotReload.Forms/17.0.0.0": {
         "runtime": {
           "Microsoft.Maui.Controls.HotReload.Forms.dll": {
@@ -1191,6 +1365,13 @@
       "path": "microsoft.maui.controls.build.tasks/9.0.111",
       "hashPath": "microsoft.maui.controls.build.tasks.9.0.111.nupkg.sha512"
     },
+    "Microsoft.Maui.Controls.Compatibility/9.0.82": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-5MEhPueXOXZKJ/+yy8+htfH93se3ZwLsq9P1dBsBoYVHnE7avxLP48XxVQQz4UiDm9thgNy2SKhvUASt3LwoCQ==",
+      "path": "microsoft.maui.controls.compatibility/9.0.82",
+      "hashPath": "microsoft.maui.controls.compatibility.9.0.82.nupkg.sha512"
+    },
     "Microsoft.Maui.Controls.Core/9.0.111": {
       "type": "package",
       "serviceable": true,
@@ -1268,6 +1449,13 @@
       "path": "microsoft.web.webview2/1.0.3179.45",
       "hashPath": "microsoft.web.webview2.1.0.3179.45.nupkg.sha512"
     },
+    "Microsoft.Win32.SystemEvents/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hqTM5628jSsQiv+HGpiq3WKBl2c8v1KZfby2J6Pr7pEPlK9waPdgEO6b8A/+/xn/yZ9ulv8HuqK71ONy2tg67A==",
+      "path": "microsoft.win32.systemevents/6.0.0",
+      "hashPath": "microsoft.win32.systemevents.6.0.0.nupkg.sha512"
+    },
     "Microsoft.Windows.SDK.BuildTools/10.0.22621.756": {
       "type": "package",
       "serviceable": true,
@@ -1281,13 +1469,6 @@
       "sha512": "sha512-LdMRw0HqGu/w0DQKDRaABdIuSL8GiRitHSMiHH3SAR715/mEiWtVWPRJKp0aMcQ6JiBBqkQVZgu71MeXmQipkw==",
       "path": "microsoft.windowsappsdk/1.7.250606001",
       "hashPath": "microsoft.windowsappsdk.1.7.250606001.nupkg.sha512"
-    },
-    "Newtonsoft.Json/13.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
-      "path": "newtonsoft.json/13.0.3",
-      "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
     },
     "runtime.any.System.Runtime/4.3.0": {
       "type": "package",
@@ -1310,12 +1491,89 @@
       "path": "runtime.win7.system.private.uri/4.3.0",
       "hashPath": "runtime.win7.system.private.uri.4.3.0.nupkg.sha512"
     },
-    "Stripe.net/50.1.0": {
+    "SkiaSharp/3.119.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-q6mc5CngdCLEWNHpFaa2NEOml/3cZ5jTDp1R7iHNbYHkGX5h0TmDa3theILyVTd2yOH9HqLmeeJMCpCwUeDy0A==",
-      "path": "stripe.net/50.1.0",
-      "hashPath": "stripe.net.50.1.0.nupkg.sha512"
+      "sha512": "sha512-+Ru1BTSZQne3Vp+vbSb50Ke3Nlc3ZnItxx4+751J9WZ8YzLKAV/n+9DAo4zFTyeCI//ueT63c+VybmTTpYBEiw==",
+      "path": "skiasharp/3.119.1",
+      "hashPath": "skiasharp.3.119.1.nupkg.sha512"
+    },
+    "SkiaSharp.Extended/3.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XEo9C8pRDQ8Kd/4UAJF4b3KBXmstuQfo2aRcczdeEwjOy3669kXQsey/fquT4b245Uvk87rfa3U+NfVJ7bOXgw==",
+      "path": "skiasharp.extended/3.0.0",
+      "hashPath": "skiasharp.extended.3.0.0.nupkg.sha512"
+    },
+    "SkiaSharp.Extended.UI.Maui/3.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-vG6uFqqOzOkBwBKn4zv/rd2UsP6fpNtpEnLKNrV8jIzwtf4vhvVATHovkRbEoZu6355cWMm49gZli3Uf9bdtoQ==",
+      "path": "skiasharp.extended.ui.maui/3.0.0",
+      "hashPath": "skiasharp.extended.ui.maui.3.0.0.nupkg.sha512"
+    },
+    "SkiaSharp.NativeAssets.Win32/3.119.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8C4GSXVJqSr0y3Tyyv5jz6MJSTVUyYkMjeKrzK+VyZPGLo89MNoUEclVuYahzOCDdtbfXrd2HtxXfDuvoSXrUw==",
+      "path": "skiasharp.nativeassets.win32/3.119.1",
+      "hashPath": "skiasharp.nativeassets.win32.3.119.1.nupkg.sha512"
+    },
+    "SkiaSharp.NativeAssets.WinUI/3.119.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-yyPomdec2EtITAzR5rb8cYhbEFQDzwZVy4j51zgD5cWT2SuH2Nkd5cRjpisXIyks3jmuUlpfGdPkk+MLlU0Zgw==",
+      "path": "skiasharp.nativeassets.winui/3.119.1",
+      "hashPath": "skiasharp.nativeassets.winui.3.119.1.nupkg.sha512"
+    },
+    "SkiaSharp.Resources/3.119.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-V552O+msolysaFPhBctyAQcm8E0bPPuX96q2sH+bDxJQGWVjWhH8P9e1g2/4crYWem69uEUMelRRyfdb4KtebQ==",
+      "path": "skiasharp.resources/3.119.1",
+      "hashPath": "skiasharp.resources.3.119.1.nupkg.sha512"
+    },
+    "SkiaSharp.SceneGraph/3.119.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-nGnSenAwNMpB2E4Z91pNmgSm/VHzpF42Egivz6heMoK5u7sI+AA+88JhIO0R8uU0RilZuFA76VJ7FFKydV3fFw==",
+      "path": "skiasharp.scenegraph/3.119.1",
+      "hashPath": "skiasharp.scenegraph.3.119.1.nupkg.sha512"
+    },
+    "SkiaSharp.Skottie/3.119.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+EiSMWSzxW6eUW6T2V+oeMfLv2l2OWVxxO7XnaSEtbU5jrsvxv7CFGCUZItMvqTH9N3bBCl+21AojcZ4z8TX3A==",
+      "path": "skiasharp.skottie/3.119.1",
+      "hashPath": "skiasharp.skottie.3.119.1.nupkg.sha512"
+    },
+    "SkiaSharp.Views/3.119.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-k+NOrmPTnkOLZtCdQhfB22V6kjCYMCErUQK35VD4o8JAMLbUVFA3p3ogfRCo36mel18XBKFdEymgiaQ52wFG9w==",
+      "path": "skiasharp.views/3.119.1",
+      "hashPath": "skiasharp.views.3.119.1.nupkg.sha512"
+    },
+    "SkiaSharp.Views.Maui.Controls/3.119.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Df44BrQqwpGqp7sOsVLO31QTJ63IkBX/cKfiYvvNQKbSR18C9/9E/yNu+cjvchvSW0pIWgdlQfXV/tHXuBjbsA==",
+      "path": "skiasharp.views.maui.controls/3.119.1",
+      "hashPath": "skiasharp.views.maui.controls.3.119.1.nupkg.sha512"
+    },
+    "SkiaSharp.Views.Maui.Core/3.119.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-brxdlRVDEXhFYBYcW/zaRRTvJiH9F8IFWb6Jjr+SJKZJFltXNWed9h73AxRgZ4+ymgtI1nr27IzUi/n0iVQE7w==",
+      "path": "skiasharp.views.maui.core/3.119.1",
+      "hashPath": "skiasharp.views.maui.core.3.119.1.nupkg.sha512"
+    },
+    "SkiaSharp.Views.WinUI/3.119.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-usAUHjtdcu9L6AZ4SD57ZohteUk21hGD7vBktlqWKMakkpsWl0UxSOpA+fa3frkLmnBa2/p2DMm9T5FhuTLHjQ==",
+      "path": "skiasharp.views.winui/3.119.1",
+      "hashPath": "skiasharp.views.winui.3.119.1.nupkg.sha512"
     },
     "System.ClientModel/1.0.0": {
       "type": "package",
@@ -1324,12 +1582,12 @@
       "path": "system.clientmodel/1.0.0",
       "hashPath": "system.clientmodel.1.0.0.nupkg.sha512"
     },
-    "System.Configuration.ConfigurationManager/9.0.0": {
+    "System.Configuration.ConfigurationManager/6.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-PdkuMrwDhXoKFo/JxISIi9E8L+QGn9Iquj2OKDWHB6Y/HnUOuBouF7uS3R4Hw3FoNmwwMo6hWgazQdyHIIs27A==",
-      "path": "system.configuration.configurationmanager/9.0.0",
-      "hashPath": "system.configuration.configurationmanager.9.0.0.nupkg.sha512"
+      "sha512": "sha512-jXw9MlUu/kRfEU0WyTptAVueupqIeE3/rl0EZDMlf8pcvJnitQ8HeVEp69rZdaStXwTV72boi/Bhw8lOeO+U2w==",
+      "path": "system.configuration.configurationmanager/6.0.1",
+      "hashPath": "system.configuration.configurationmanager.6.0.1.nupkg.sha512"
     },
     "System.Diagnostics.DiagnosticSource/6.0.1": {
       "type": "package",
@@ -1338,12 +1596,12 @@
       "path": "system.diagnostics.diagnosticsource/6.0.1",
       "hashPath": "system.diagnostics.diagnosticsource.6.0.1.nupkg.sha512"
     },
-    "System.Diagnostics.EventLog/9.0.0": {
+    "System.Drawing.Common/6.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-qd01+AqPhbAG14KtdtIqFk+cxHQFZ/oqRSCoxU1F+Q6Kv0cl726sl7RzU9yLFGd4BUOKdN4XojXF0pQf/R6YeA==",
-      "path": "system.diagnostics.eventlog/9.0.0",
-      "hashPath": "system.diagnostics.eventlog.9.0.0.nupkg.sha512"
+      "sha512": "sha512-NfuoKUiP2nUWwKZN6twGqXioIe1zVD0RIj2t976A+czLHr2nY454RwwXs6JU9Htc6mwqL6Dn/nEL3dpVf2jOhg==",
+      "path": "system.drawing.common/6.0.0",
+      "hashPath": "system.drawing.common.6.0.0.nupkg.sha512"
     },
     "System.Formats.Asn1/9.0.11": {
       "type": "package",
@@ -1408,6 +1666,13 @@
       "path": "system.runtime.compilerservices.unsafe/6.0.0",
       "hashPath": "system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
     },
+    "System.Security.AccessControl/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AUADIc0LIEQe7MzC+I0cl0rAT8RrTAKFHl53yHjEUzNVIaUlhFY11vc2ebiVJzVBuOzun6F7FBA+8KAbGTTedQ==",
+      "path": "system.security.accesscontrol/6.0.0",
+      "hashPath": "system.security.accesscontrol.6.0.0.nupkg.sha512"
+    },
     "System.Security.Cryptography.Cng/5.0.0": {
       "type": "package",
       "serviceable": true,
@@ -1415,12 +1680,19 @@
       "path": "system.security.cryptography.cng/5.0.0",
       "hashPath": "system.security.cryptography.cng.5.0.0.nupkg.sha512"
     },
-    "System.Security.Cryptography.ProtectedData/9.0.0": {
+    "System.Security.Cryptography.ProtectedData/6.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-CJW+x/F6fmRQ7N6K8paasTw9PDZp4t7G76UjGNlSDgoHPF0h08vTzLYbLZpOLEJSg35d5wy2jCXGo84EN05DpQ==",
-      "path": "system.security.cryptography.protecteddata/9.0.0",
-      "hashPath": "system.security.cryptography.protecteddata.9.0.0.nupkg.sha512"
+      "sha512": "sha512-rp1gMNEZpvx9vP0JW0oHLxlf8oSiQgtno77Y4PLUBjSiDYoD77Y8uXHr1Ea5XG4/pIKhqAdxZ8v8OTUtqo9PeQ==",
+      "path": "system.security.cryptography.protecteddata/6.0.0",
+      "hashPath": "system.security.cryptography.protecteddata.6.0.0.nupkg.sha512"
+    },
+    "System.Security.Permissions/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-T/uuc7AklkDoxmcJ7LGkyX1CcSviZuLCa4jg3PekfJ7SU0niF0IVTXwUiNVP9DSpzou2PpxJ+eNY2IfDM90ZCg==",
+      "path": "system.security.permissions/6.0.0",
+      "hashPath": "system.security.permissions.6.0.0.nupkg.sha512"
     },
     "System.Security.Principal.Windows/5.0.0": {
       "type": "package",
@@ -1463,6 +1735,13 @@
       "sha512": "sha512-zteT+G8xuGu6mS+mzDzYXbzS7rd3K6Fjb9RiZlYlJPam2/hU7JCBZBVEcywNuR+oZ1ncTvc/cq0faRr3P01OVg==",
       "path": "system.threading.tasks.extensions/4.5.4",
       "hashPath": "system.threading.tasks.extensions.4.5.4.nupkg.sha512"
+    },
+    "System.Windows.Extensions/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IXoJOXIqc39AIe+CIR7koBtRGMiCt/LPM3lI+PELtDIy9XdyeSrwXFdWV9dzJ2Awl0paLWUaknLxFQ5HpHZUog==",
+      "path": "system.windows.extensions/6.0.0",
+      "hashPath": "system.windows.extensions.6.0.0.nupkg.sha512"
     },
     "Microsoft.Maui.Controls.HotReload.Forms/17.0.0.0": {
       "type": "reference",

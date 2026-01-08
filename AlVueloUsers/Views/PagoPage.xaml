@@ -264,16 +264,45 @@
         </ScrollView>
 
         <VerticalStackLayout Grid.Row="1" BackgroundColor="{StaticResource AlVueloBg}">
-           
 
-            <Button Text="Pagar" 
-                    BackgroundColor="{StaticResource AlVueloDarkRed}" 
-                    TextColor="White" 
-                    HeightRequest="60" 
-                    CornerRadius="12" 
-                    Margin="20" 
-                    FontAttributes="Bold"
-                    FontSize="18"/>
+            <Grid Margin="20" HeightRequest="60">
+
+                <Button x:Name="BtnPagar"
+                Text="Pagar" 
+                BackgroundColor="{StaticResource AlVueloDarkRed}"
+                TextColor="White"
+                CornerRadius="12"
+                FontAttributes="Bold"
+                FontSize="18"
+                Clicked="OnPagarClicked"/>
+
+                <ActivityIndicator x:Name="SpinnerCarga"
+                           IsRunning="False"
+                           IsVisible="False"
+                           Color="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+            </Grid>
+
         </VerticalStackLayout>
+        <Grid x:Name="LoadingOverlay"
+                BackgroundColor="#80000000"
+                IsVisible="False"
+                Grid.RowSpan="2"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill">
+
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+                <Border Padding="30" BackgroundColor="White">
+                    <VerticalStackLayout Spacing="15">
+                        <ActivityIndicator IsRunning="True" Color="{StaticResource AlVueloRed}" />
+                        <Label Text="Procesando pago..." 
+                       TextColor="{StaticResource AlVueloRed}" 
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </Grid>
     </Grid>
 </ContentPage>

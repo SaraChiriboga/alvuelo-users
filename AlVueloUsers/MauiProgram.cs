@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Handlers; // Necesario para los Handlers
+using Microsoft.Maui.Handlers;
+using SkiaSharp.Views.Maui.Controls.Hosting; // Necesario para los Handlers
 
 namespace AlVueloUsers
 {
@@ -10,6 +11,7 @@ namespace AlVueloUsers
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseSkiaSharp()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("Inter-Italic-Variable.ttf", "InterItalic");

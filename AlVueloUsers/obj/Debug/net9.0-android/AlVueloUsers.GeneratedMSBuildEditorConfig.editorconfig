@@ -48,6 +48,12 @@ build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Resources.Sty
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
 build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Styles.xaml
 
+[C:/Users/saril/Desktop/progra4/AlVueloUsers/AlVueloUsers/Views/PagoExitosoEntregaPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.PagoExitosoEntregaPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\PagoExitosoEntregaPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\PagoExitosoEntregaPage.xaml
+
 [C:/Users/saril/Desktop/progra4/AlVueloUsers/AlVueloUsers/Views/PagoPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.PagoPage.xaml

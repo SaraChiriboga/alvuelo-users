@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
+             x:Class="AlVueloUsers.Views.PagoExitosoPage"
+             BackgroundColor="{StaticResource AlVueloRed}" 
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid>
+        <VerticalStackLayout VerticalOptions="Center" 
+                             HorizontalOptions="Center" 
+                             Spacing="10"
+                             Padding="30">
+
+            <skia:SKLottieView x:Name="LottieAnimacion"
+                               Source="success-delivery.json"
+                               RepeatCount="-1"
+                               IsAnimationEnabled="True"
+                               WidthRequest="350"
+                               HeightRequest="250"
+                               HorizontalOptions="Center" />
+
+            <Label Text="¡Pedido Confirmado!"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="White" 
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Opacity="0"
+                   x:Name="LabelTitulo"/>
+
+            <Label Text="Tu orden ha sido enviada a la cocina."
+                   FontSize="16"
+                   TextColor="#F0F0F0"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Opacity="0"
+                   x:Name="LabelSubtitulo"/>
+
+            <Button Text="Entendido"
+                    BackgroundColor="White"
+                    TextColor="{StaticResource AlVueloRed}"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    WidthRequest="270"
+                    Margin="0,40,0,0"
+                    Opacity="0"
+                    x:Name="BotonInicio"
+                    Clicked="OnEntendidoClicked"/>
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
