@@ -67,11 +67,7 @@
                     <Grid RowDefinitions="Auto, *, Auto">
                         <HorizontalStackLayout Spacing="10">
                             <Border WidthRequest="50" HeightRequest="40" StrokeShape="RoundRectangle 8" BackgroundColor="#FFD700" Stroke="#DAA520" StrokeThickness="2"/>
-                            <Image x:Name="LogoTarjeta" WidthRequest="60" HeightRequest="40" HorizontalOptions="EndAndExpand" Opacity="0.9">
-                                <Image.Source>
-                                    <FontImageSource FontFamily="FABrands" Glyph="&#xf1f0;" Color="#CCCCCC" Size="40"/>
-                                </Image.Source>
-                            </Image>
+                            <Image x:Name="LogoTarjeta" WidthRequest="60" HeightRequest="40" HorizontalOptions="EndAndExpand" Opacity="1.0"/>
                         </HorizontalStackLayout>
 
                         <Label x:Name="NumeroTarjetaPreview"
@@ -153,9 +149,8 @@
                             <Switch x:Name="SwitchGuardarTarjeta" Grid.Column="2" OnColor="{StaticResource AlVueloRed}" ThumbColor="LightGray" VerticalOptions="Center"/>
                         </Grid>
                     </Border>
-                    
-                </VerticalStackLayout>
 
+                </VerticalStackLayout>
                 <BoxView HeightRequest="20" Color="Transparent"/>
             </VerticalStackLayout>
         </ScrollView>
@@ -172,18 +167,18 @@
                         Clicked="OnPagarClicked"
                         Shadow="{Shadow Brush={StaticResource AlVueloDarkRed}, Offset='0,4', Radius=12, Opacity=0.3}"/>
 
-                <ActivityIndicator x:Name="SpinnerCarga" IsRunning="False" IsVisible="False" Color="White" WidthRequest="32" HeightRequest="32" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <ActivityIndicator x:Name="SpinnerCarga"
+                                   IsRunning="False"
+                                   IsVisible="False"
+                                   Color="White"
+                                   WidthRequest="32"
+                                   HeightRequest="32"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   InputTransparent="True"
+                                   ZIndex="99"/>
             </Grid>
         </Border>
 
-        <Grid x:Name="LoadingOverlay" Grid.RowSpan="3" BackgroundColor="#CC000000" IsVisible="False">
-            <Border Padding="35" BackgroundColor="White" StrokeShape="RoundRectangle 20" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="220">
-                <VerticalStackLayout Spacing="18" HorizontalOptions="Center">
-                    <ActivityIndicator IsRunning="True" Color="{StaticResource AlVueloRed}" WidthRequest="44" HeightRequest="44"/>
-                    <Label Text="Procesando pago..." TextColor="#1a1a1a" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center"/>
-                    <Label Text="No cierres esta pantalla" TextColor="#666666" FontSize="13" HorizontalTextAlignment="Center"/>
-                </VerticalStackLayout>
-            </Border>
-        </Grid>
     </Grid>
 </ContentPage>

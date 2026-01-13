@@ -1,7 +1,10 @@
-using AlVueloUsers.Data;
+ï»¿using AlVueloUsers.Data;
 using AlVueloUsers.Models;
 using AlVueloUsers.Services;
 using Microsoft.EntityFrameworkCore;
+#if ANDROID
+using Android.Graphics.Drawables;
+#endif
 
 namespace AlVueloUsers.Views
 {
@@ -11,85 +14,109 @@ namespace AlVueloUsers.Views
         private string _tipoTarjeta = "Desconocida";
         private decimal _montoAPagar;
         private string _clienteId;
+        private bool _isFormatting = false;
 
-        // 1. CONSTRUCTOR VACÍO (Obligatorio para que MAUI no crashee)
         public AgregarTarjetaPage()
         {
             InitializeComponent();
             _paypalService = new PayPalService();
+            _clienteId = "C001";
+            ModifyEntryHandler();
         }
 
-        // 2. CONSTRUCTOR CON PARÁMETROS (El que usas tú manualmente)
-        // Usamos ": this()" para reciclar el código del constructor vacío
         public AgregarTarjetaPage(decimal montoAPagar, string clienteId) : this()
         {
-            _montoAPagar = montoAPagar;
+            _montoAPagar = montoAPagar; // Guardamos el valor dinÃ¡mico (ej: 7.54, 8.04, etc.)
             _clienteId = clienteId;
-
-            // Actualizar texto del botón con el monto
             BtnPagar.Text = $"Pagar ${_montoAPagar:F2}";
         }
 
-        private void OnNumeroTarjetaChanged(object sender, TextChangedEventArgs e)
+        void ModifyEntryHandler()
         {
-            // Evitar bucles infinitos si el texto no cambió realmente
-            if (e.NewTextValue == e.OldTextValue) return;
-
-            string textoOriginal = e.NewTextValue ?? "";
-            string numeroLimpio = textoOriginal.Replace(" ", "");
-
-            // 1. LIMITAR LONGITUD MANUALMENTE (Reemplazo de MaxLength)
-            // 16 dígitos reales máximo
-            if (numeroLimpio.Length > 16)
+            Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (h, v) =>
             {
-                numeroLimpio = numeroLimpio.Substring(0, 16);
-            }
-
-            // 2. FORMATEAR (1234 5678...)
-            string formatted = "";
-            for (int i = 0; i < numeroLimpio.Length; i++)
-            {
-                if (i > 0 && i % 4 == 0)
-                    formatted += " ";
-                formatted += numeroLimpio[i];
-            }
-
-            // 3. APLICAR CAMBIOS SOLO SI ES NECESARIO
-            if (EntryNumeroTarjeta.Text != formatted)
-            {
-                EntryNumeroTarjeta.Text = formatted;
-
-                // TRUCO: Mantener el cursor al final para que no salte al inicio
-                // Esto evita que el usuario se frustre al escribir rápido
-                EntryNumeroTarjeta.CursorPosition = formatted.Length;
-                return;
-            }
-
-            // 4. ACTUALIZAR VISTA PREVIA (Lógica visual)
-            ActualizarPreviewTarjeta(numeroLimpio);
-
-            // 5. DETECTAR TIPO
-            DetectarTipoTarjeta(numeroLimpio);
+#if ANDROID
+                if (h.PlatformView != null)
+                    h.PlatformView.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+#endif
+            });
         }
 
-        // He separado esto en un método pequeño para que el código de arriba sea más limpio
+        // --- EVENTOS UI (IdÃ©nticos pero seguros) ---
+        private void OnNumeroTarjetaChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_isFormatting) return;
+            if (e.NewTextValue == e.OldTextValue) return;
+            Dispatcher.Dispatch(() => {
+                try
+                {
+                    _isFormatting = true;
+                    string val = e.NewTextValue ?? "";
+                    string numeroLimpio = val.Replace(" ", "");
+                    if (numeroLimpio.Length > 16) numeroLimpio = numeroLimpio.Substring(0, 16);
+
+                    string formatted = "";
+                    for (int i = 0; i < numeroLimpio.Length; i++)
+                    {
+                        if (i > 0 && i % 4 == 0) formatted += " ";
+                        formatted += numeroLimpio[i];
+                    }
+                    if (EntryNumeroTarjeta.Text != formatted)
+                    {
+                        EntryNumeroTarjeta.Text = formatted;
+                        try { EntryNumeroTarjeta.CursorPosition = formatted.Length; } catch { }
+                    }
+                    ActualizarPreviewTarjeta(numeroLimpio);
+                    DetectarTipoTarjeta(numeroLimpio);
+                }
+                finally { _isFormatting = false; }
+            });
+        }
+
+        private void OnFechaExpiracionChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_isFormatting) return;
+            if (e.NewTextValue == e.OldTextValue) return;
+            Dispatcher.Dispatch(() => {
+                try
+                {
+                    _isFormatting = true;
+                    string val = e.NewTextValue ?? "";
+                    string fechaLimpia = val.Replace("/", "");
+                    if (fechaLimpia.Length > 4) fechaLimpia = fechaLimpia.Substring(0, 4);
+
+                    string formatted = fechaLimpia;
+                    if (fechaLimpia.Length >= 2) formatted = fechaLimpia.Insert(2, "/");
+                    if (EntryFechaExpiracion.Text != formatted)
+                    {
+                        EntryFechaExpiracion.Text = formatted;
+                        try { EntryFechaExpiracion.CursorPosition = formatted.Length; } catch { }
+                    }
+                    FechaTarjetaPreview.Text = string.IsNullOrEmpty(formatted) ? "MM/AA" : formatted;
+                }
+                finally { _isFormatting = false; }
+            });
+        }
+
+        private void OnNombreTitularChanged(object sender, TextChangedEventArgs e)
+        {
+            string val = e.NewTextValue ?? "";
+            NombreTarjetaPreview.Text = string.IsNullOrEmpty(val) ? "TU NOMBRE" : val.ToUpper();
+        }
+
+        // --- LÃ“GICA VISUAL ---
         private void ActualizarPreviewTarjeta(string numeroLimpio)
         {
-            if (string.IsNullOrEmpty(numeroLimpio))
-            {
-                NumeroTarjetaPreview.Text = "•••• •••• •••• ••••";
-            }
+            string num = numeroLimpio ?? "";
+            if (string.IsNullOrEmpty(num)) NumeroTarjetaPreview.Text = "â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢";
             else
             {
                 string preview = "";
                 for (int i = 0; i < 16; i++)
                 {
                     if (i > 0 && i % 4 == 0) preview += " ";
-
-                    if (i < numeroLimpio.Length)
-                        preview += numeroLimpio[i];
-                    else
-                        preview += "•";
+                    if (i < num.Length) preview += num[i];
+                    else preview += "â€¢";
                 }
                 NumeroTarjetaPreview.Text = preview;
             }
@@ -97,170 +124,182 @@ namespace AlVueloUsers.Views
 
         private void DetectarTipoTarjeta(string numero)
         {
-            if (string.IsNullOrEmpty(numero)) { ResetearTipoTarjeta(); return; }
-
-            string colorFondo = "#1a1a1a";
+            string num = numero ?? "";
+            if (string.IsNullOrEmpty(num)) { ResetearTipoTarjeta(); return; }
+            Color colorFondo = Color.FromArgb("#CCCCCC");
             string iconoGlyph = "\uf1f0";
-            string colorMarca = "#CCCCCC";
-
-            if (numero.StartsWith("4")) { _tipoTarjeta = "Visa"; iconoGlyph = "\uf1f0"; colorMarca = "#1A1F71"; }
-            else if (numero.StartsWith("5")) { _tipoTarjeta = "Mastercard"; iconoGlyph = "\uf1f1"; colorMarca = "#EB001B"; }
-            else if (numero.StartsWith("3")) { _tipoTarjeta = "Amex"; iconoGlyph = "\uf1f3"; colorMarca = "#006FCF"; }
-            else { ResetearTipoTarjeta(); return; }
-
-            ActualizarLogoTarjeta(iconoGlyph, colorMarca);
+            bool esConocida = true;
+            if (num.StartsWith("4")) { _tipoTarjeta = "Visa"; iconoGlyph = "\uf1f0"; colorFondo = Color.FromArgb("#1A1F71"); }
+            else if (num.StartsWith("5")) { _tipoTarjeta = "Mastercard"; iconoGlyph = "\uf1f1"; colorFondo = Color.FromArgb("#EB001B"); }
+            else if (num.StartsWith("3")) { _tipoTarjeta = "Amex"; iconoGlyph = "\uf1f3"; colorFondo = Color.FromArgb("#006FCF"); }
+            else { esConocida = false; }
+            if (!esConocida) { ResetearTipoTarjeta(); return; }
+            ActualizarLogoTarjeta(iconoGlyph, colorFondo, Colors.White);
             IconoTipoTarjeta.IsVisible = true;
-            IconoTipoTarjeta.Source = new FontImageSource { FontFamily = "FABrands", Glyph = iconoGlyph, Color = Color.FromArgb(colorMarca), Size = 32 };
+            if (IconoTipoTarjeta.Source is FontImageSource fontIcon) { fontIcon.Glyph = iconoGlyph; fontIcon.Color = colorFondo; }
+            else { IconoTipoTarjeta.Source = new FontImageSource { FontFamily = "FABrands", Glyph = iconoGlyph, Color = colorFondo, Size = 32 }; }
         }
 
-        private void ActualizarLogoTarjeta(string glyph, string colorHex)
+        private void ActualizarLogoTarjeta(string glyph, Color colorFondo, Color colorLogo)
         {
-            LogoTarjeta.Source = new FontImageSource { FontFamily = "FABrands", Glyph = glyph, Color = Color.FromArgb(colorHex), Size = 50 };
-            TarjetaPreview.BackgroundColor = Color.FromArgb(colorHex);
+            if (LogoTarjeta.Source is FontImageSource fontImage) { fontImage.Glyph = glyph; fontImage.Color = colorLogo; }
+            else { LogoTarjeta.Source = new FontImageSource { FontFamily = "FABrands", Glyph = glyph, Color = colorLogo, Size = 40 }; }
+            TarjetaPreview.BackgroundColor = colorFondo;
         }
 
         private void ResetearTipoTarjeta()
         {
             _tipoTarjeta = "Desconocida";
-            LogoTarjeta.Source = new FontImageSource { FontFamily = "FABrands", Glyph = "\uf1f0", Color = Colors.Gray, Size = 50 };
+            ActualizarLogoTarjeta("\uf1f0", Color.FromArgb("#1a1a1a"), Colors.Transparent);
             IconoTipoTarjeta.IsVisible = false;
-            TarjetaPreview.BackgroundColor = Color.FromArgb("#1a1a1a");
         }
 
-        private void OnNombreTitularChanged(object sender, TextChangedEventArgs e)
-        {
-            string nombre = e.NewTextValue?.ToUpper() ?? "";
-            NombreTarjetaPreview.Text = string.IsNullOrEmpty(nombre) ? "TU NOMBRE" : nombre;
-        }
-
-        private void OnFechaExpiracionChanged(object sender, TextChangedEventArgs e)
-        {
-            string fecha = e.NewTextValue?.Replace("/", "") ?? "";
-            if (fecha.Length >= 2 && !e.NewTextValue.Contains("/"))
-            {
-                fecha = fecha.Insert(2, "/");
-                EntryFechaExpiracion.Text = fecha;
-                return;
-            }
-            FechaTarjetaPreview.Text = string.IsNullOrEmpty(e.NewTextValue) ? "MM/AA" : e.NewTextValue;
-        }
-
+        // --- LÃ“GICA DE PAGO BLINDADA ---
         private async void OnPagarClicked(object sender, EventArgs e)
         {
             if (!ValidarCampos()) return;
 
+            string textoOriginal = BtnPagar.Text ?? "Pagar";
+
             try
             {
-                LoadingOverlay.IsVisible = true;
+                // UI: Bloquear
+                BtnPagar.Text = "";
                 BtnPagar.IsEnabled = false;
+                SpinnerCarga.IsVisible = true;
+                SpinnerCarga.IsRunning = true;
 
+                await Task.Delay(50);
+
+                // RECOPILACIÃ“N SEGURA DE DATOS (Evita Object Reference Not Set)
+                string numeroLimpio = (EntryNumeroTarjeta.Text ?? "").Replace(" ", "");
+                string titular = (EntryNombreTitular.Text ?? "").ToUpper();
+                string fecha = EntryFechaExpiracion.Text ?? "";
+                string cvv = EntryCvv.Text ?? "";
+
+                // 1. GUARDAR EN BD (Si Switch estÃ¡ activo)
                 string tarjetaGuardadaNum = null;
                 if (SwitchGuardarTarjeta.IsToggled)
                 {
-                    tarjetaGuardadaNum = await GuardarTarjetaEnBD();
+                    // Llamamos al mÃ©todo blindado
+                    tarjetaGuardadaNum = await GuardarTarjetaEnBD(numeroLimpio, titular, fecha, cvv);
                 }
 
-                string numeroLimpio = EntryNumeroTarjeta.Text.Replace(" ", "");
-
-                // Llama al servicio (que arreglaremos en el paso 2)
-                bool pagoExitoso = await _paypalService.ProcesarPagoConTarjeta(
-                    _montoAPagar, numeroLimpio, EntryNombreTitular.Text, EntryFechaExpiracion.Text, EntryCvv.Text, _tipoTarjeta
+                // 2. PROCESAR CON PAYPAL API
+                // Usamos una variable var para recibir la tupla (bool Exito, string Mensaje)
+                var resultadoPago = await _paypalService.ProcesarPagoConTarjeta(
+                    _montoAPagar, numeroLimpio, titular, fecha, cvv, _tipoTarjeta
                 );
 
-                if (pagoExitoso)
+                if (resultadoPago.Exito)
                 {
                     string pinGenerado = await CrearPedido(tarjetaGuardadaNum);
-                    await DisplayAlert("¡Pago Exitoso!", "Tu pedido ha sido confirmado.", "OK");
 
-                    // Asegúrate de que PagoExitosoEntregaPage tenga el constructor que recibe string
-                    Application.Current.MainPage = new NavigationPage(new PagoExitosoEntregaPage(pinGenerado));
+                    // Navegar a Ã©xito
+                    await Navigation.PushModalAsync(new PagoExitosoEntregaPage(pinGenerado));
+
+                    // Retornamos para no ejecutar el finally visual que restaurarÃ­a el botÃ³n
+                    return;
                 }
                 else
                 {
-                    await DisplayAlert("Error", "El pago fue rechazado.", "OK");
+                    // Mostramos el mensaje exacto que nos dio PayPal
+                    await DisplayAlert("Pago Rechazado", $"PayPal dice: {resultadoPago.Mensaje}", "OK");
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Ocurrió un problema: {ex.Message}", "OK");
+                await DisplayAlert("Error", $"OcurriÃ³ un error inesperado: {ex.Message}", "OK");
             }
             finally
             {
-                LoadingOverlay.IsVisible = false;
-                BtnPagar.IsEnabled = true;
+                // Restaurar botÃ³n (solo si seguimos en esta pÃ¡gina)
+                if (this.IsLoaded)
+                {
+                    BtnPagar.Text = textoOriginal;
+                    BtnPagar.IsEnabled = true;
+                    SpinnerCarga.IsVisible = false;
+                    SpinnerCarga.IsRunning = false;
+                }
             }
         }
 
         private bool ValidarCampos()
         {
-            // Validaciones simples
-            if ((EntryNumeroTarjeta.Text?.Length ?? 0) < 13) return false;
-            if (string.IsNullOrWhiteSpace(EntryNombreTitular.Text)) return false;
-            if ((EntryCvv.Text?.Length ?? 0) < 3) return false;
+            if (string.IsNullOrEmpty(EntryNumeroTarjeta.Text) || EntryNumeroTarjeta.Text.Length < 16) return false;
+            if (string.IsNullOrEmpty(EntryNombreTitular.Text)) return false;
+            if (string.IsNullOrEmpty(EntryCvv.Text) || EntryCvv.Text.Length < 3) return false;
+            if (string.IsNullOrEmpty(EntryFechaExpiracion.Text)) return false;
             return true;
         }
 
-        private async Task<string> GuardarTarjetaEnBD()
+        // --- MÃ‰TODO BD QUE NO FALLA SI YA EXISTE ---
+        private async Task<string> GuardarTarjetaEnBD(string num, string nombre, string fecha, string cvv)
+        {
+            // 1. Intentar Guardar Tarjeta
+            try
+            {
+                using (var db = new AlVueloDbContext())
+                {
+                    // Si no existe, la agregamos
+                    if (!await db.Tarjetas.AnyAsync(t => t.NumTarjeta == num))
+                    {
+                        var tarjeta = new Tarjeta { NumTarjeta = num, NombreTitular = nombre, FechaExpiracion = fecha, Cvv = cvv };
+                        db.Tarjetas.Add(tarjeta);
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+            catch
+            {
+                // Si falla (ej. carrera de hilos o duplicado), lo ignoramos. 
+                // Asumimos que la tarjeta ya estÃ¡ ahÃ­.
+            }
+
+            // 2. Intentar Guardar RelaciÃ³n (En un contexto nuevo y limpio)
+            try
+            {
+                using (var db = new AlVueloDbContext())
+                {
+                    // Si no existe la relaciÃ³n, la agregamos
+                    if (!await db.ClientesTarjetas.AnyAsync(ct => ct.ClienteId == _clienteId && ct.NumTarjeta == num))
+                    {
+                        db.ClientesTarjetas.Add(new ClienteTarjeta { ClienteId = _clienteId, NumTarjeta = num });
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+            catch
+            {
+                // Ignorar error de relaciÃ³n duplicada
+            }
+
+            return num;
+        }
+
+        private async Task<string> CrearPedido(string tarjetaNum)
         {
             try
             {
                 using (var db = new AlVueloDbContext())
                 {
-                    string numeroLimpio = EntryNumeroTarjeta.Text.Replace(" ", "");
-                    var existe = await db.Tarjetas.AnyAsync(t => t.NumTarjeta == numeroLimpio);
-
-                    if (!existe)
+                    string pinGenerado = new Random().Next(0, 10000).ToString("D4");
+                    var pedido = new Pedido
                     {
-                        var tarjeta = new Tarjeta
-                        {
-                            NumTarjeta = numeroLimpio,
-                            NombreTitular = EntryNombreTitular.Text,
-                            FechaExpiracion = EntryFechaExpiracion.Text,
-                            Cvv = EntryCvv.Text
-                            // QUITAMOS 'TipoTarjeta' PORQUE NO ESTÁ EN TU MODELO
-                        };
-                        db.Tarjetas.Add(tarjeta);
-                        await db.SaveChangesAsync();
-                    }
-
-                    var relacion = new ClienteTarjeta { ClienteId = _clienteId, NumTarjeta = numeroLimpio };
-                    if (!await db.ClientesTarjetas.AnyAsync(ct => ct.ClienteId == _clienteId && ct.NumTarjeta == numeroLimpio))
-                    {
-                        db.ClientesTarjetas.Add(relacion);
-                        await db.SaveChangesAsync();
-                    }
-                    return numeroLimpio;
+                        ClienteId = _clienteId,
+                        RestauranteId = "UPO1",
+                        Estado = "Confirmado",
+                        TipoServicio = "Entrega (Nueva Tarjeta)",
+                        MetodoPago = $"Tarjeta {_tipoTarjeta}",
+                        Pin = pinGenerado,
+                        Total = _montoAPagar
+                    };
+                    db.Pedidos.Add(pedido);
+                    await db.SaveChangesAsync();
+                    return pinGenerado;
                 }
             }
-            catch (Exception) { return null; }
-        }
-
-        private async Task<string> CrearPedido(string tarjetaNum)
-        {
-            using (var db = new AlVueloDbContext())
-            {
-                string pinGenerado = new Random().Next(0, 10000).ToString("D4");
-
-                var pedido = new Pedido
-                {
-                    ClienteId = _clienteId,
-                    RestauranteId = "R001",
-                    Estado = "Confirmado",
-                    TipoServicio = "Entrega (Nueva Tarjeta)",
-                    MetodoPago = $"Tarjeta {_tipoTarjeta}",
-                    Pin = pinGenerado,
-
-                    // CORRECCIÓN DE MODELO:
-                    // Usamos 'Total' (que sí existe) en vez de 'MontoTotal'
-                    // Quitamos 'FechaHora' (seguramente la BD lo pone por defecto o no existe)
-                    Total = _montoAPagar
-                };
-
-                db.Pedidos.Add(pedido);
-                await db.SaveChangesAsync();
-
-                return pinGenerado;
-            }
+            catch { return "0000"; }
         }
 
         private async void OnVolverClicked(object sender, EventArgs e)

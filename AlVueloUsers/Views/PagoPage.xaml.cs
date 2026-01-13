@@ -12,6 +12,11 @@ namespace AlVueloUsers.Views
         private Border _servicioSeleccionadoActual;
         private VisualElement _metodoPagoSeleccionadoActual;
 
+        // VALORES ECONÓMICOS
+        private decimal _subtotalProductos = 0.96m;
+        private decimal _tarifaServicio = 0.96m;
+        private decimal _costoEnvio = 0.00m; // Cambia dinámicamente según el servicio
+
         public PagoPage()
         {
             InitializeComponent();
@@ -19,40 +24,199 @@ namespace AlVueloUsers.Views
             // 1. Ocultar la navegación nativa
             NavigationPage.SetHasNavigationBar(this, false);
 
-            // subscribe radio events if present (generated fields from XAML)
+            // Suscripciones a eventos de RadioButtons
             if (RadioTarjeta != null) RadioTarjeta.CheckedChanged += OnRadioMetodoCheckedChanged;
             if (RadioDeuna != null) RadioDeuna.CheckedChanged += OnRadioMetodoCheckedChanged;
             if (RadioTransfer != null) RadioTransfer.CheckedChanged += OnRadioMetodoCheckedChanged;
             if (RadioEfectivo != null) RadioEfectivo.CheckedChanged += OnRadioMetodoCheckedChanged;
 
-            // 2. Configuración por defecto del Campus y ETA
+            // 2. Configuración por defecto
             PickerCampus.SelectedIndex = 0; // UdlaPark por defecto
             UpdateEstimatedTime();
 
             // 3. Suscribirse al evento de cambio de campus
             PickerCampus.SelectedIndexChanged += OnCampusChanged;
 
-            // 4. Cargar datos de SQL (Servidor SARILOLA)
+            // 4. Cargar datos
             CargarTarjetaDesdeBD();
-
-            // 5. Configurar visuales iniciales de servicios
             SetupInitialServicios();
-
-            // 6. Configurar estado inicial de métodos de pago
             UpdatePaymentMethodsAvailability();
 
-            // 7. Inicializar envio en $0.00
-            if (LabelEnvioAmount != null)
-                LabelEnvioAmount.Text = "$0.00";
-
+            // 5. Inicializar el total visualmente (Calcula Envío + Total)
             UpdateEnvioAmountForService();
 
-            // Forzar la selección visual inicial de la Tarjeta
+            // Forzar la selección visual inicial de la Tarjeta si existe
             if (GridMetodo_Tarjeta != null)
             {
                 OnMetodoPagoSelected(GridMetodo_Tarjeta, EventArgs.Empty);
             }
         }
+
+        // --- MÉTODOS DE CÁLCULO DE TOTALES ---
+
+        private void ActualizarTotal()
+        {
+            // Cálculo del Total Real
+            decimal totalCalculado = _subtotalProductos + _tarifaServicio + _costoEnvio;
+
+            // Actualizar Label Total en la UI
+            if (LabelTotal != null)
+            {
+                LabelTotal.Text = $"${totalCalculado:F2}";
+            }
+
+            // Actualizar Botón Pagar para reflejar el monto
+            if (BtnPagar != null && BtnPagar.IsEnabled)
+            {
+                BtnPagar.Text = $"Confirmar y Pagar (${totalCalculado:F2})";
+            }
+        }
+
+        private void UpdateEnvioAmountForService()
+        {
+            if (_servicioSeleccionadoActual == BorderCampus)
+            {
+                _costoEnvio = 0.50m;
+            }
+            else
+            {
+                _costoEnvio = 0.00m; // Retiro o Consumo es gratis
+            }
+
+            // Actualizar etiqueta visual
+            if (LabelEnvioAmount != null)
+            {
+                LabelEnvioAmount.Text = $"${_costoEnvio:F2}";
+            }
+
+            // Recalcular el total general
+            ActualizarTotal();
+        }
+
+        // --- LÓGICA DE INTERACCIÓN Y NAVEGACIÓN ---
+
+        private async void OnMetodoPagoSelected(object sender, EventArgs e)
+        {
+            var layout = sender as VisualElement;
+            if (layout == null || layout.Opacity < 1.0) return;
+
+            var tapped = e as TappedEventArgs;
+            string comando = tapped?.Parameter?.ToString();
+
+            // CASO ESPECIAL: BOTÓN "AGREGAR NUEVA TARJETA"
+            if (comando == "Agregar")
+            {
+                // Calculamos el total actual para pasarlo a la siguiente página
+                decimal totalActual = _subtotalProductos + _tarifaServicio + _costoEnvio;
+
+                // Navegamos pasando el total y el ID del cliente
+                await Navigation.PushAsync(new AgregarTarjetaPage(totalActual, "C001"));
+                return;
+            }
+
+            // Gestión de cambio de selección visual
+            if (_metodoPagoSeleccionadoActual != null && _metodoPagoSeleccionadoActual != layout)
+            {
+                ResetMetodoPagoVisuals(_metodoPagoSeleccionadoActual);
+                UncheckRadioOfElement(_metodoPagoSeleccionadoActual);
+            }
+
+            ApplyMetodoPagoSelectedVisuals(layout);
+            CheckRadioOfElement(layout);
+            _metodoPagoSeleccionadoActual = layout;
+
+            // Animación de feedback
+            await layout.ScaleTo(0.98, 50);
+            await layout.ScaleTo(1.0, 50);
+        }
+
+        private async void OnPagarClicked(object sender, EventArgs e)
+        {
+            if (_metodoPagoSeleccionadoActual == null)
+            {
+                await DisplayAlert("Error", "Selecciona un método de pago.", "OK");
+                return;
+            }
+
+            // Calcular Total Final al momento del clic
+            decimal totalFinal = _subtotalProductos + _tarifaServicio + _costoEnvio;
+
+            // Guardar estado visual del botón
+            string textoOriginal = BtnPagar.Text;
+
+            // Poner UI en estado de carga
+            BtnPagar.Text = "";
+            BtnPagar.IsEnabled = false;
+            SpinnerCarga.IsVisible = true;
+            SpinnerCarga.IsRunning = true;
+
+            try
+            {
+                bool pagoAprobado = false;
+                string pinParaEnviar = "";
+
+                if (_metodoPagoSeleccionadoActual == GridMetodo_Tarjeta)
+                {
+                    var tarjetaInfo = await ObtenerTarjetaParaPago("C001");
+
+                    if (tarjetaInfo != null)
+                    {
+                        var servicio = new PayPalService();
+
+                        // Llamada al servicio con el TOTAL DINÁMICO
+                        var resultado = await servicio.ProcesarPago(
+                            totalFinal,
+                            tarjetaInfo.NumTarjeta,
+                            tarjetaInfo.FechaExpiracion,
+                            tarjetaInfo.Cvv,
+                            tarjetaInfo.NombreTitular
+                        );
+
+                        if (resultado.Exito)
+                        {
+                            pagoAprobado = true;
+                            pinParaEnviar = await RegistrarPedidoEnBD("Pagado (PayPal)", totalFinal);
+                        }
+                        else
+                        {
+                            await DisplayAlert("Error", resultado.Mensaje, "OK");
+                        }
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", "No se encontró tarjeta guardada.", "OK");
+                    }
+                }
+                else
+                {
+                    // Lógica para Efectivo o Transferencia
+                    pagoAprobado = true;
+                    pinParaEnviar = await RegistrarPedidoEnBD("Pendiente de pago", totalFinal);
+                }
+
+                if (pagoAprobado)
+                {
+                    await Navigation.PushModalAsync(new PagoExitosoEntregaPage(pinParaEnviar));
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
+            finally
+            {
+                // Restaurar botón si seguimos en la misma página
+                if (Application.Current.MainPage is not NavigationPage nav || nav.CurrentPage is PagoPage)
+                {
+                    BtnPagar.Text = textoOriginal;
+                    BtnPagar.IsEnabled = true;
+                    SpinnerCarga.IsVisible = false;
+                    SpinnerCarga.IsRunning = false;
+                }
+            }
+        }
+
+        // --- MÉTODOS VISUALES Y HELPERS ---
 
         private void SetupInitialServicios()
         {
@@ -64,7 +228,7 @@ namespace AlVueloUsers.Views
             ResetServicioVisuals(retiro);
             ResetServicioVisuals(consumo);
 
-            // Seleccionar Campus por defecto visualmente
+            // Seleccionar Campus por defecto
             if (campus != null)
             {
                 ApplyServicioSelectedVisuals(campus);
@@ -83,7 +247,6 @@ namespace AlVueloUsers.Views
 
             string selectedCampus = PickerCampus.SelectedItem.ToString();
 
-            // Actualización del LabelTiempoEstimado según el campus seleccionado
             switch (selectedCampus)
             {
                 case "UdlaPark":
@@ -107,7 +270,6 @@ namespace AlVueloUsers.Views
             {
                 using (var db = new AlVueloDbContext())
                 {
-                    // Consulta con Join entre Cliente_Tarjeta y Tarjeta para Ana Martínez (C001)
                     var tarjetaInfo = await (from ct in db.Set<ClienteTarjeta>()
                                              join t in db.Tarjetas on ct.NumTarjeta equals t.NumTarjeta
                                              where ct.ClienteId == "C001"
@@ -132,7 +294,6 @@ namespace AlVueloUsers.Views
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error SQL: {ex.Message}");
-                LabelNombreTarjeta.Text = "Error al conectar con el servidor";
             }
         }
 
@@ -145,13 +306,20 @@ namespace AlVueloUsers.Views
             }
         }
 
-        // --- MÉTODOS VISUALES DE SERVICIO ---
-
         private void ResetServicioVisuals(Border b)
         {
             if (b == null) return;
             b.Stroke = new SolidColorBrush(Color.FromArgb("#E0E0E0"));
-            b.StrokeThickness = 1;
+            b.StrokeThickness = 0; // Sin borde visible cuando no está seleccionado
+            b.BackgroundColor = Colors.White;
+        }
+
+        private void ApplyServicioSelectedVisuals(Border b)
+        {
+            if (b == null) return;
+            var red = GetAppColor("AlVueloRed", Colors.Red);
+            b.Stroke = new SolidColorBrush(red);
+            b.StrokeThickness = 1; // Borde rojo visible cuando está seleccionado
             b.BackgroundColor = Colors.White;
         }
 
@@ -163,26 +331,18 @@ namespace AlVueloUsers.Views
             return fallback;
         }
 
-        private void ApplyServicioSelectedVisuals(Border b)
-        {
-            if (b == null) return;
-            var red = GetAppColor("AlVueloRed", Colors.Red);
-            b.Stroke = new SolidColorBrush(red);
-            b.StrokeThickness = 1;
-            b.BackgroundColor = Colors.White;
-        }
-
         private async void OnServicioSelected(object sender, EventArgs e)
         {
             Border border = sender as Border;
             if (border == null) return;
 
-            // Feedback de oscurecimiento (Hover)
+            // Efecto visual rápido
             var originalColor = border.BackgroundColor;
             border.BackgroundColor = Color.FromArgb("#F0F0F0");
             await Task.Delay(100);
             border.BackgroundColor = originalColor;
 
+            // Cambiar selección visual
             if (_servicioSeleccionadoActual != null && _servicioSeleccionadoActual != border)
             {
                 ResetServicioVisuals(_servicioSeleccionadoActual);
@@ -191,47 +351,12 @@ namespace AlVueloUsers.Views
             ApplyServicioSelectedVisuals(border);
             _servicioSeleccionadoActual = border;
 
-            // Actualizar disponibilidad de métodos de pago según el servicio seleccionado
+            // Actualizar lógica dependiente
             UpdatePaymentMethodsAvailability();
+            UpdateEnvioAmountForService(); // Recalcular total
 
-            // Si el servicio es Campus, actualizar el label de envío
-            UpdateEnvioAmountForService();
-
-            // Animación de clic
             await border.ScaleTo(0.98, 50);
             await border.ScaleTo(1.0, 50);
-        }
-
-        // --- MÉTODOS VISUALES DE PAGO ---
-
-        private async void OnMetodoPagoSelected(object sender, EventArgs e)
-        {
-            var layout = sender as VisualElement;
-            if (layout == null) return;
-
-            // 1. Si el layout está deshabilitado (como Deuna en Campus), no hacer nada
-            if (layout.Opacity < 1.0) return;
-
-            // 2. Gestión de selección previa
-            if (_metodoPagoSeleccionadoActual != null && _metodoPagoSeleccionadoActual != layout)
-            {
-                ResetMetodoPagoVisuals(_metodoPagoSeleccionadoActual);
-                UncheckRadioOfElement(_metodoPagoSeleccionadoActual);
-            }
-
-            // 3. Aplicar visuales y Check al Radio correspondiente
-            ApplyMetodoPagoSelectedVisuals(layout);
-            CheckRadioOfElement(layout);
-            _metodoPagoSeleccionadoActual = layout;
-
-            // 4. Animación de feedback táctil (Scale)
-            await layout.ScaleTo(0.98, 50);
-            await layout.ScaleTo(1.0, 50);
-
-            // Debug del parámetro seleccionado
-            var tapped = e as TappedEventArgs;
-            string metodo = tapped?.Parameter?.ToString() ?? "Manual";
-            System.Diagnostics.Debug.WriteLine($"Seleccionado: {metodo}");
         }
 
         private void ResetMetodoPagoVisuals(VisualElement element)
@@ -248,86 +373,52 @@ namespace AlVueloUsers.Views
 
         private void SetMetodoVisuals(VisualElement element, Color textColor, Color borderIconColor)
         {
-            if (element == GridMetodo_Tarjeta) { LabelNombreTarjeta.TextColor = textColor; BorderIcon_Tarjeta.Stroke = borderIconColor; }
-            else if (element == GridMetodo_Deuna) { LabelDeuna.TextColor = textColor; BorderIcon_Deuna.Stroke = borderIconColor; }
-            else if (element == GridMetodo_Transfer) { LabelTransfer.TextColor = textColor; BorderIcon_Transfer.Stroke = borderIconColor; }
-            else if (element == GridMetodo_Efectivo) { LabelEfectivo.TextColor = textColor; BorderIcon_Efectivo.Stroke = borderIconColor; }
-            else if (element == GridMetodo_Agregar) { LabelAgregar.TextColor = textColor; BorderIcon_Agregar.Stroke = borderIconColor; }
+            if (element == GridMetodo_Tarjeta)
+            {
+                LabelNombreTarjeta.TextColor = textColor;
+                BorderIcon_Tarjeta.Stroke = borderIconColor;
+            }
+            else if (element == GridMetodo_Deuna)
+            {
+                LabelDeuna.TextColor = textColor;
+                BorderIcon_Deuna.Stroke = borderIconColor;
+            }
+            else if (element == GridMetodo_Transfer)
+            {
+                LabelTransfer.TextColor = textColor;
+                BorderIcon_Transfer.Stroke = borderIconColor;
+            }
+            else if (element == GridMetodo_Efectivo)
+            {
+                LabelEfectivo.TextColor = textColor;
+                BorderIcon_Efectivo.Stroke = borderIconColor;
+            }
+            else if (element == GridMetodo_Agregar)
+            {
+                LabelAgregar.TextColor = textColor;
+                BorderIcon_Agregar.Stroke = borderIconColor;
+            }
         }
 
         private void UncheckRadioOfElement(VisualElement element)
         {
-            if (element == GridMetodo_Tarjeta) { if (RadioTarjeta != null) RadioTarjeta.IsChecked = false; }
-            else if (element == GridMetodo_Deuna) { if (RadioDeuna != null) RadioDeuna.IsChecked = false; }
-            else if (element == GridMetodo_Transfer) { if (RadioTransfer != null) RadioTransfer.IsChecked = false; }
-            else if (element == GridMetodo_Efectivo) { if (RadioEfectivo != null) RadioEfectivo.IsChecked = false; }
-            // Agregar no tiene radio
+            if (element == GridMetodo_Tarjeta && RadioTarjeta != null) RadioTarjeta.IsChecked = false;
+            else if (element == GridMetodo_Deuna && RadioDeuna != null) RadioDeuna.IsChecked = false;
+            else if (element == GridMetodo_Transfer && RadioTransfer != null) RadioTransfer.IsChecked = false;
+            else if (element == GridMetodo_Efectivo && RadioEfectivo != null) RadioEfectivo.IsChecked = false;
         }
 
         private void CheckRadioOfElement(VisualElement element)
         {
-            if (element == GridMetodo_Tarjeta) { if (RadioTarjeta != null) RadioTarjeta.IsChecked = true; }
-            else if (element == GridMetodo_Deuna) { if (RadioDeuna != null) RadioDeuna.IsChecked = true; }
-            else if (element == GridMetodo_Transfer) { if (RadioTransfer != null) RadioTransfer.IsChecked = true; }
-            else if (element == GridMetodo_Efectivo) { if (RadioEfectivo != null) RadioEfectivo.IsChecked = true; }
-        }
-
-        private void UpdatePaymentMethodsAvailability()
-        {
-            // Por defecto, deshabilitar Deuna y Transfer
-            bool allowDeunaTransfer = false;
-
-            if (_servicioSeleccionadoActual != null)
-            {
-                if (_servicioSeleccionadoActual == BorderRetiro || _servicioSeleccionadoActual == BorderConsumo)
-                {
-                    allowDeunaTransfer = true;
-                }
-            }
-
-            // Establecer IsEnabled y opacidad para indicar disponibilidad
-            if (RadioDeuna != null) RadioDeuna.IsEnabled = allowDeunaTransfer;
-            var gDeunaObj = this.FindByName("GridMetodo_Deuna");
-            var gDeuna = gDeunaObj as Grid;
-            if (gDeuna != null) gDeuna.Opacity = allowDeunaTransfer ? 1.0 : 0.5;
-
-            if (RadioTransfer != null) RadioTransfer.IsEnabled = allowDeunaTransfer;
-            var gTransferObj = this.FindByName("GridMetodo_Transfer");
-            var gTransfer = gTransferObj as Grid;
-            if (gTransfer != null) gTransfer.Opacity = allowDeunaTransfer ? 1.0 : 0.5;
-
-            // Si método seleccionado actualmente no está disponible, resetear selección a tarjeta por defecto
-            if (!allowDeunaTransfer && (_metodoPagoSeleccionadoActual == GridMetodo_Deuna || _metodoPagoSeleccionadoActual == GridMetodo_Transfer))
-            {
-                ResetMetodoPagoVisuals(_metodoPagoSeleccionadoActual);
-                UncheckRadioOfElement(_metodoPagoSeleccionadoActual);
-                _metodoPagoSeleccionadoActual = null;
-                // Seleccionar Tarjeta por defecto
-                OnMetodoPagoSelected(GridMetodo_Tarjeta, EventArgs.Empty);
-            }
-        }
-
-        private void UpdateEnvioAmountForService()
-        {
-            // If LabelEnvioAmount generated in partial class, use it; otherwise try FindByName
-            var envioObj = this.FindByName("LabelEnvioAmount");
-            var envio = envioObj as Label;
-            if (envio != null)
-            {
-                if (_servicioSeleccionadoActual == BorderCampus)
-                    envio.Text = "$0.50";
-                else
-                    envio.Text = "$0.00";
-            }
-            else if (LabelEnvioAmount != null)
-            {
-                LabelEnvioAmount.Text = _servicioSeleccionadoActual == BorderCampus ? "$0.50" : "$0.00";
-            }
+            if (element == GridMetodo_Tarjeta && RadioTarjeta != null) RadioTarjeta.IsChecked = true;
+            else if (element == GridMetodo_Deuna && RadioDeuna != null) RadioDeuna.IsChecked = true;
+            else if (element == GridMetodo_Transfer && RadioTransfer != null) RadioTransfer.IsChecked = true;
+            else if (element == GridMetodo_Efectivo && RadioEfectivo != null) RadioEfectivo.IsChecked = true;
         }
 
         private void OnRadioMetodoCheckedChanged(object sender, CheckedChangedEventArgs e)
         {
-            if (!e.Value) return; // solo manejar cuando se chequea
+            if (!e.Value) return; // Solo actuar cuando se selecciona (True)
 
             var rb = sender as RadioButton;
             if (rb == null) return;
@@ -335,119 +426,50 @@ namespace AlVueloUsers.Views
             if (RadioTarjeta != null && rb == RadioTarjeta)
             {
                 OnMetodoPagoSelected(GridMetodo_Tarjeta, EventArgs.Empty);
-                return;
             }
-
-            if (RadioDeuna != null && rb == RadioDeuna && (RadioDeuna.IsEnabled))
+            else if (RadioDeuna != null && rb == RadioDeuna && RadioDeuna.IsEnabled)
             {
                 OnMetodoPagoSelected(GridMetodo_Deuna, EventArgs.Empty);
-                return;
             }
-
-            if (RadioTransfer != null && rb == RadioTransfer && (RadioTransfer.IsEnabled))
+            else if (RadioTransfer != null && rb == RadioTransfer && RadioTransfer.IsEnabled)
             {
                 OnMetodoPagoSelected(GridMetodo_Transfer, EventArgs.Empty);
-                return;
             }
-
-            if (RadioEfectivo != null && rb == RadioEfectivo)
+            else if (RadioEfectivo != null && rb == RadioEfectivo)
             {
                 OnMetodoPagoSelected(GridMetodo_Efectivo, EventArgs.Empty);
-                return;
             }
         }
 
-        private async void OnPagarClicked(object sender, EventArgs e)
+        private void UpdatePaymentMethodsAvailability()
         {
-            // 1. Validación rápida
-            if (_metodoPagoSeleccionadoActual == null)
+            // Solo permitir Deuna/Transferencia si NO es entrega a domicilio
+            bool allowDeunaTransfer = _servicioSeleccionadoActual == BorderRetiro || _servicioSeleccionadoActual == BorderConsumo;
+
+            if (RadioDeuna != null) RadioDeuna.IsEnabled = allowDeunaTransfer;
+            var gDeuna = this.FindByName<Grid>("GridMetodo_Deuna");
+            if (gDeuna != null) gDeuna.Opacity = allowDeunaTransfer ? 1.0 : 0.5;
+
+            if (RadioTransfer != null) RadioTransfer.IsEnabled = allowDeunaTransfer;
+            var gTransfer = this.FindByName<Grid>("GridMetodo_Transfer");
+            if (gTransfer != null) gTransfer.Opacity = allowDeunaTransfer ? 1.0 : 0.5;
+
+            // Si la selección actual queda deshabilitada, volver a Tarjeta
+            if (!allowDeunaTransfer && (_metodoPagoSeleccionadoActual == GridMetodo_Deuna || _metodoPagoSeleccionadoActual == GridMetodo_Transfer))
             {
-                await DisplayAlert("Error", "Selecciona un método de pago.", "OK");
-                return;
-            }
+                ResetMetodoPagoVisuals(_metodoPagoSeleccionadoActual);
+                UncheckRadioOfElement(_metodoPagoSeleccionadoActual);
+                _metodoPagoSeleccionadoActual = null;
 
-            // --- ESTADO DE CARGA (UX) ---
-            string textoOriginal = BtnPagar.Text;
-
-            // Cambios visuales
-            BtnPagar.Text = "";
-            BtnPagar.IsEnabled = false;
-            SpinnerCarga.IsVisible = true;
-            SpinnerCarga.IsRunning = true;
-            // ----------------------------
-
-            try
-            {
-                bool pagoAprobado = false;
-                string pinParaEnviar = ""; // <--- VARIABLE PARA GUARDAR EL PIN
-
-                if (_metodoPagoSeleccionadoActual == GridMetodo_Tarjeta)
-                {
-                    // --- Lógica de PayPal ---
-                    var tarjetaInfo = await ObtenerTarjetaParaPago("C001");
-                    if (tarjetaInfo != null)
-                    {
-                        var servicio = new PayPalService();
-                        // Nota: Asegúrate de usar el Total real, aquí puse 7.54m fijo como en tu ejemplo
-                        var resultado = await servicio.ProcesarPago(7.54m, tarjetaInfo.NumTarjeta, tarjetaInfo.FechaExpiracion, tarjetaInfo.Cvv, tarjetaInfo.NombreTitular);
-
-                        if (resultado.Exito)
-                        {
-                            pagoAprobado = true;
-                            // CAPTURAMOS EL PIN AL REGISTRAR
-                            pinParaEnviar = await RegistrarPedidoEnBD("Pagado (PayPal)");
-                        }
-                        else
-                        {
-                            await DisplayAlert("Error", resultado.Mensaje, "OK");
-                        }
-                    }
-                    else
-                    {
-                        await DisplayAlert("Error", "No se encontró la información de la tarjeta", "OK");
-                    }
-                }
-                else
-                {
-                    // --- Efectivo / Transferencia ---
-                    pagoAprobado = true; // Asumimos éxito inmediato
-
-                    // CAPTURAMOS EL PIN AL REGISTRAR
-                    pinParaEnviar = await RegistrarPedidoEnBD("Pendiente de pago");
-                }
-
-                // --- NAVEGACIÓN ---
-                if (pagoAprobado)
-                {
-                    // Pasamos el PIN capturado a la página de éxito
-                    // IMPORTANTE: Debes actualizar el constructor de PagoExitosoEntregaPage para recibir el string
-                    await Navigation.PushModalAsync(new PagoExitosoEntregaPage(pinParaEnviar));
-                }
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", ex.Message, "OK");
-            }
-            finally
-            {
-                // Solo restauramos el botón si NO nos fuimos de la página (hubo error o no se aprobó)
-                // Verificamos si seguimos en esta pantalla
-                if (Application.Current.MainPage is not NavigationPage nav || nav.CurrentPage is PagoPage)
-                {
-                    BtnPagar.Text = textoOriginal;
-                    BtnPagar.IsEnabled = true;
-                    SpinnerCarga.IsVisible = false;
-                    SpinnerCarga.IsRunning = false;
-                }
+                // Volver a seleccionar Tarjeta por defecto
+                OnMetodoPagoSelected(GridMetodo_Tarjeta, EventArgs.Empty);
             }
         }
 
-        // Método auxiliar para obtener el objeto Tarjeta completo (incluido CVV)
         private async Task<Tarjeta> ObtenerTarjetaParaPago(string clienteId)
         {
             using (var db = new AlVueloDbContext())
             {
-                // Hacemos el JOIN igual que en tu método de carga, pero devolvemos todo el objeto
                 return await (from ct in db.Set<ClienteTarjeta>()
                               join t in db.Tarjetas on ct.NumTarjeta equals t.NumTarjeta
                               where ct.ClienteId == clienteId
@@ -455,36 +477,36 @@ namespace AlVueloUsers.Views
             }
         }
 
-        // Cambiamos 'Task' por 'Task<string>' para devolver el PIN generado
-        private async Task<string> RegistrarPedidoEnBD(string estadoFinal)
+        private async Task<string> RegistrarPedidoEnBD(string estadoFinal, decimal totalReal)
         {
-            using (var db = new AlVueloDbContext())
+            try
             {
-                // 1. Generar el PIN aquí
-                var random = new Random();
-                string pinGenerado = random.Next(0, 10000).ToString("D4"); // Ej: "0482"
-
-                var nuevoPedido = new Pedido
+                using (var db = new AlVueloDbContext())
                 {
-                    ClienteId = "C001",
-                    RestauranteId = "UPO1",
-                    Total = 7.54m,
-                    Estado = "Pendiente",
-                    TipoServicio = $"Entrega campus ({PickerCampus.SelectedItem})",
-                    MetodoPago = estadoFinal,
+                    var random = new Random();
+                    string pinGenerado = random.Next(0, 10000).ToString("D4");
 
-                    // 2. Guardamos el PIN en el objeto
-                    Pin = pinGenerado
-                };
+                    var nuevoPedido = new Pedido
+                    {
+                        ClienteId = "C001",
+                        RestauranteId = "UPO1",
+                        Total = totalReal,
+                        Estado = "Pendiente",
+                        TipoServicio = $"Entrega ({PickerCampus.SelectedItem})",
+                        MetodoPago = estadoFinal,
+                        Pin = pinGenerado
+                    };
 
-                db.Pedidos.Add(nuevoPedido);
-                await db.SaveChangesAsync(); // Nota: Usa SaveChangesAsync para no bloquear
+                    db.Pedidos.Add(nuevoPedido);
+                    await db.SaveChangesAsync();
 
-                // 3. Devolvemos el PIN para usarlo en la navegación
-                return pinGenerado;
+                    return pinGenerado;
+                }
+            }
+            catch
+            {
+                return "0000"; // Fallback PIN
             }
         }
-
-
     }
 }
