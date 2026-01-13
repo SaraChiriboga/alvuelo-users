@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AlVueloUsers.Views.AgregarTarjetaPage"
+             BackgroundColor="{StaticResource AlVueloBg}"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid RowDefinitions="Auto, *, Auto">
+
+        <Border Grid.Row="0"
+                Padding="20,15"
+                StrokeThickness="0"
+                Shadow="{Shadow Brush=Black, Offset='0,2', Radius=8, Opacity=0.08}">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <Border WidthRequest="40" 
+                        HeightRequest="40"
+                        BackgroundColor="Transparent"
+                        StrokeShape="RoundRectangle 12"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnVolverClicked"/>
+                    </Border.GestureRecognizers>
+                    <Label FontFamily="FASolid" 
+                           Text="&#xf060;" 
+                           TextColor="#1a1a1a"
+                           FontSize="16"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                </Border>
+
+                <VerticalStackLayout Grid.Column="1" 
+                                     VerticalOptions="Center"
+                                     Margin="15,0">
+                    <Label Text="Agregar Tarjeta"
+                           Style="{StaticResource SectionHeaderStyle}"/>
+                    <Label Text="Ingresa los datos de tu tarjeta"
+                           FontSize="13"
+                           TextColor="#666666"/>
+                </VerticalStackLayout>
+
+                <Border Grid.Column="2"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="#F0FFF4"
+                        VerticalOptions="Center">
+                    <Label FontFamily="FASolid" 
+                           Text="&#xf023;" 
+                           TextColor="#228B22"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20" Spacing="24">
+
+                <Border x:Name="TarjetaPreview"
+                        HeightRequest="200"
+                        BackgroundColor="{StaticResource AlVueloDarkRed}"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0"
+                        Padding="24"
+                        Shadow="{Shadow Brush=Black, Offset='0,8', Radius=20, Opacity=0.3}">
+                    <Grid RowDefinitions="Auto, *, Auto">
+                        <HorizontalStackLayout Spacing="10">
+                            <Border WidthRequest="50" HeightRequest="40" StrokeShape="RoundRectangle 8" BackgroundColor="#FFD700" Stroke="#DAA520" StrokeThickness="2"/>
+                            <Image x:Name="LogoTarjeta" WidthRequest="60" HeightRequest="40" HorizontalOptions="EndAndExpand" Opacity="0.9">
+                                <Image.Source>
+                                    <FontImageSource FontFamily="FABrands" Glyph="&#xf1f0;" Color="#CCCCCC" Size="40"/>
+                                </Image.Source>
+                            </Image>
+                        </HorizontalStackLayout>
+
+                        <Label x:Name="NumeroTarjetaPreview"
+                               Grid.Row="1"
+                               Text="•••• •••• •••• ••••"
+                               FontSize="22"
+                               FontFamily="Courier"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               VerticalOptions="Center"
+                               CharacterSpacing="2"/>
+                        <Grid Grid.Row="2" ColumnDefinitions="*, Auto">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="NOMBRE DEL TITULAR" FontSize="9" TextColor="#999999" CharacterSpacing="1"/>
+                                <Label x:Name="NombreTarjetaPreview" Text="TU NOMBRE" FontSize="14" FontAttributes="Bold" TextColor="White"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="4" HorizontalOptions="End">
+                                <Label Text="VENCE" FontSize="9" TextColor="#999999" HorizontalTextAlignment="End" CharacterSpacing="1"/>
+                                <Label x:Name="FechaTarjetaPreview" Text="MM/AA" FontSize="14" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="End"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <VerticalStackLayout Spacing="16">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Número de tarjeta" FontSize="14" FontAttributes="Bold" TextColor="#1a1a1a"/>
+                        <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#E0E0E0" Padding="0">
+                            <Grid ColumnDefinitions="Auto, *, Auto" Padding="16,0">
+                                <Label FontFamily="FASolid" Text="&#xf09d;" TextColor="#999999" FontSize="16" VerticalOptions="Center" Margin="0,0,12,0"/>
+                                <Entry x:Name="EntryNumeroTarjeta" Grid.Column="1" Placeholder="1234 5678 9012 3456" Keyboard="Numeric" MaxLength="19" TextColor="#1a1a1a" PlaceholderColor="#CCCCCC" FontSize="16" TextChanged="OnNumeroTarjetaChanged"/>
+                                <Image x:Name="IconoTipoTarjeta" Grid.Column="2" WidthRequest="32" HeightRequest="24" VerticalOptions="Center" IsVisible="False"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Nombre del titular" FontSize="14" FontAttributes="Bold" TextColor="#1a1a1a"/>
+                        <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#E0E0E0" Padding="0">
+                            <Grid ColumnDefinitions="Auto, *" Padding="16,0">
+                                <Label FontFamily="FASolid" Text="&#xf007;" TextColor="#999999" FontSize="16" VerticalOptions="Center" Margin="0,0,12,0"/>
+                                <Entry x:Name="EntryNombreTitular" Grid.Column="1" Placeholder="Como aparece en la tarjeta" TextColor="#1a1a1a" PlaceholderColor="#CCCCCC" FontSize="16" TextChanged="OnNombreTitularChanged"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Fecha de expiración" FontSize="14" FontAttributes="Bold" TextColor="#1a1a1a"/>
+                            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#E0E0E0" Padding="0">
+                                <Grid ColumnDefinitions="Auto, *" Padding="16,0">
+                                    <Label FontFamily="FASolid" Text="&#xf133;" TextColor="#999999" FontSize="16" VerticalOptions="Center" Margin="0,0,12,0"/>
+                                    <Entry x:Name="EntryFechaExpiracion" Grid.Column="1" Placeholder="MM/AA" Keyboard="Numeric" MaxLength="5" TextColor="#1a1a1a" PlaceholderColor="#CCCCCC" FontSize="16" TextChanged="OnFechaExpiracionChanged"/>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="CVV" FontSize="14" FontAttributes="Bold" TextColor="#1a1a1a"/>
+                            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#E0E0E0" Padding="0">
+                                <Grid ColumnDefinitions="Auto, *" Padding="16,0">
+                                    <Label FontFamily="FASolid" Text="&#xf05a;" TextColor="#999999" FontSize="16" VerticalOptions="Center" Margin="0,0,12,0"/>
+                                    <Entry x:Name="EntryCvv" Grid.Column="1" Placeholder="123" IsPassword="True" Keyboard="Numeric" MaxLength="4" TextColor="#1a1a1a" PlaceholderColor="#CCCCCC" FontSize="16"/>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#E0E0E0" Padding="16">
+                        <Grid ColumnDefinitions="Auto, *, Auto">
+                            <Border WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 12" BackgroundColor="#FFF5F5">
+                                <Label FontFamily="FASolid" Text="&#xf0c7;" TextColor="{StaticResource AlVueloRed}" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Margin="12,0">
+                                <Label Text="Guardar tarjeta" FontSize="15" FontAttributes="Bold" TextColor="#1a1a1a"/>
+                                <Label Text="Para usar en futuros pagos" FontSize="13" TextColor="#666666"/>
+                            </VerticalStackLayout>
+                            <Switch x:Name="SwitchGuardarTarjeta" Grid.Column="2" OnColor="{StaticResource AlVueloRed}" ThumbColor="LightGray" VerticalOptions="Center"/>
+                        </Grid>
+                    </Border>
+                    
+                </VerticalStackLayout>
+
+                <BoxView HeightRequest="20" Color="Transparent"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Border Grid.Row="2" Padding="20,12,20,20" StrokeThickness="0" Shadow="{Shadow Brush=Black, Offset='0,-2', Radius=12, Opacity=0.08}">
+            <Grid HeightRequest="56">
+                <Button x:Name="BtnPagar"
+                        Text="Pagar" 
+                        BackgroundColor="{StaticResource AlVueloDarkRed}"
+                        TextColor="White"
+                        CornerRadius="14"
+                        FontAttributes="Bold"
+                        FontSize="17"
+                        Clicked="OnPagarClicked"
+                        Shadow="{Shadow Brush={StaticResource AlVueloDarkRed}, Offset='0,4', Radius=12, Opacity=0.3}"/>
+
+                <ActivityIndicator x:Name="SpinnerCarga" IsRunning="False" IsVisible="False" Color="White" WidthRequest="32" HeightRequest="32" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Grid>
+        </Border>
+
+        <Grid x:Name="LoadingOverlay" Grid.RowSpan="3" BackgroundColor="#CC000000" IsVisible="False">
+            <Border Padding="35" BackgroundColor="White" StrokeShape="RoundRectangle 20" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="220">
+                <VerticalStackLayout Spacing="18" HorizontalOptions="Center">
+                    <ActivityIndicator IsRunning="True" Color="{StaticResource AlVueloRed}" WidthRequest="44" HeightRequest="44"/>
+                    <Label Text="Procesando pago..." TextColor="#1a1a1a" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center"/>
+                    <Label Text="No cierres esta pantalla" TextColor="#666666" FontSize="13" HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

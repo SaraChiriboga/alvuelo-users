@@ -9,6 +9,6 @@
     Shell.TabBarIsVisible="False">
     <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate views:PagoPage}"
+        ContentTemplate="{DataTemplate views:AgregarTarjetaPage}"
         Route="PagoPage" />
 </Shell>

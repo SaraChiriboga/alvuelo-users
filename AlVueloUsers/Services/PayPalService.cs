@@ -38,6 +38,19 @@ namespace AlVueloUsers.Services
             return doc.RootElement.GetProperty("access_token").GetString();
         }
 
+        // --- MÉTODO NUEVO NECESARIO ---
+        // Este método simula el pago para que AgregarTarjetaPage funcione
+        public async Task<bool> ProcesarPagoConTarjeta(decimal monto, string numero, string nombre, string fecha, string cvv, string tipo)
+        {
+            await Task.Delay(3000); // Simular espera
+
+            // Validación básica simulada
+            if (!string.IsNullOrEmpty(numero) && !string.IsNullOrEmpty(cvv))
+            {
+                return true;
+            }
+            return false;
+        }
         // CAMBIO: Ahora devolvemos una tupla (Exito, MensajeError)
         // Método actualizado con la corrección del Header
         public async Task<(bool Exito, string Mensaje)> ProcesarPago(decimal total, string numeroTarjeta, string fechaExpiracion, string cvv, string titular)
