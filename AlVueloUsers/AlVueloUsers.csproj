@@ -2,16 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
-
-		<!-- Note for MacCatalyst:
-		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
-		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
-		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
-		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>AlVueloUsers</RootNamespace>
@@ -30,58 +20,109 @@
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+
+		<AndroidEnableMultiDex>true</AndroidEnableMultiDex>
+		<AndroidJavaMaxHeapSize>4G</AndroidJavaMaxHeapSize>
+		<AndroidDexTool>d8</AndroidDexTool>
+		<!-- DESACTIVAR R8 COMPLETAMENTE -->
+		<AndroidEnableProguard>false</AndroidEnableProguard>
+		<AndroidLinkMode>None</AndroidLinkMode>
+		<AndroidUseAapt2>true</AndroidUseAapt2>
+		<!-- Opciones adicionales para depuración -->
+		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<!-- Splash Screen - COMENTADO TEMPORALMENTE -->
+		<!-- <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" /> -->
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
-		
+		<!-- <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" /> -->
+
 		<!-- Custom Fonts -->
-		<MauiFont Include="Resources\Fonts\*" />
+		<MauiFont Include="Resources\Fonts\*.ttf" />
+		<MauiFont Include="Resources\Fonts\*.otf" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
+		<PackageReference Include="Microsoft.Maui.Core" Version="9.0.120" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.11" />
+		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="9.0.120" />
 		<PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="3.0.0" />
 	</ItemGroup>
 
+	<!-- Dependencias Android -->
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+		<!-- Google Play Services -->
+		<PackageReference Include="Xamarin.GooglePlayServices.Maps" Version="119.2.0.4" />
+		<PackageReference Include="Xamarin.GooglePlayServices.Base" Version="118.9.0.1" />
+		<PackageReference Include="Xamarin.GooglePlayServices.Basement" Version="118.9.0.1" />
+		<PackageReference Include="Xamarin.GooglePlayServices.Tasks" Version="118.4.0.2" />
+
+		<!-- AndroidX Startup - NECESARIO para Google Play Services -->
+		<PackageReference Include="Xamarin.AndroidX.Startup.StartupRuntime" Version="1.2.0.6" />
+
+		<!-- AndroidX Core - Requerido por Startup -->
+		<PackageReference Include="Xamarin.AndroidX.Core" Version="1.17.0.1" />
+		<PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.7.0.6" />
+
+		<!-- AndroidX - Activity y Fragment -->
+		<PackageReference Include="Xamarin.AndroidX.Activity" Version="1.12.2.1" />
+		<PackageReference Include="Xamarin.AndroidX.Activity.Ktx" Version="1.12.2.1" />
+		<PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.8.9.1" />
+
+		<!-- AndroidX - Lifecycle (todas en versión 2.10.0.1) -->
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Common" Version="2.10.0.1" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.10.0.1" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core" Version="2.10.0.1" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" Version="2.10.0.1" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Ktx" Version="2.10.0.1" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModel.Ktx" Version="2.10.0.1" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.10.0.1" />
+
+		<!-- AndroidX - Collections -->
+		<PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.5.0.4" />
+		<PackageReference Include="Xamarin.AndroidX.Collection.Jvm" Version="1.5.0.4" />
+	</ItemGroup>
+
+	<!-- SOLUCIÓN AL CONFLICTO DE COMPOSE -->
 	<ItemGroup>
-	  <Compile Update="Views\PagoExitosoEntregaPage.xaml.cs">
-	    <DependentUpon>PagoExitosoEntregaPage.xaml</DependentUpon>
-	  </Compile>
+		<!-- Excluir completamente los paquetes problemáticos de Compose -->
+		<PackageReference Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Android" Version="*" ExcludeAssets="all" />
+		<PackageReference Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Jvm" Version="*" ExcludeAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\PagoExitosoEntregaPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\PagoPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\SeguimientoPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+		<Compile Update="Views\PagoPage.xaml.cs">
+			<DependentUpon>PagoPage.xaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<MauiXaml Update="Views\PagoPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\SeguimientoEntregaPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 	</ItemGroup>
 
 </Project>

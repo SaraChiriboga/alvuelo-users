@@ -67,4 +67,44 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
+    <Style x:Key="SeguimientoHeaderLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="#333333" />
+    </Style>
+
+    <Style x:Key="SeguimientoBodyLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="#666666" />
+    </Style>
+
+    <Style x:Key="PinBoxStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#A6FFFFFF" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="HeightRequest" Value="80" />
+        <Setter Property="WidthRequest" Value="60" />
+    </Style>
+
+    <Style x:Key="PinDigitStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="TextColor" Value="#333333" />
+    </Style>
+
+    <Style x:Key="FloatingHomeButtonStyle" TargetType="Border">
+        <Setter Property="VerticalOptions" Value="End" />
+        <Setter Property="Margin" Value="30,20" />
+        <Setter Property="HeightRequest" Value="60" />
+        <Setter Property="BackgroundColor" Value="#C23939" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 30" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="Black" Offset="0,5" Radius="10" Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

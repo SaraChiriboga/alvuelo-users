@@ -1,10 +1,14 @@
 namespace AlVueloUsers.Views
 {
-    public partial class PagoExitosoPage : ContentPage
+    public partial class PagoExitosoEntregaPage : ContentPage
     {
-        public PagoExitosoPage()
+        private string _pinCompartido;
+
+        // Recibe el PIN
+        public PagoExitosoEntregaPage(string pin)
         {
             InitializeComponent();
+            _pinCompartido = pin; // Guárdalo
         }
 
         protected override async void OnAppearing()
@@ -37,7 +41,7 @@ namespace AlVueloUsers.Views
         {
             // RESETEAR LA NAVEGACIÓN
             // Vuelve al HomePage y borra el historial para que no puedan volver al pago
-            Application.Current.MainPage = new NavigationPage(new PagoPage());
+            Application.Current.MainPage = new NavigationPage(new SeguimientoEntregaPage(_pinCompartido));
             // Si tu página principal se llama de otra forma, cambia 'HomePage' por el nombre correcto.
         }
     }

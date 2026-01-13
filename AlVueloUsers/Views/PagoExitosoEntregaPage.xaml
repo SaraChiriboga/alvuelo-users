@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
-             x:Class="AlVueloUsers.Views.PagoExitosoPage"
+             x:Class="AlVueloUsers.Views.PagoExitosoEntregaPage"
              BackgroundColor="{StaticResource AlVueloRed}" 
              NavigationPage.HasNavigationBar="False">
 
@@ -13,7 +13,7 @@
                              Padding="30">
 
             <skia:SKLottieView x:Name="LottieAnimacion"
-                               Source="success-delivery.json"
+                               Source="success_delivery.json"
                                RepeatCount="-1"
                                IsAnimationEnabled="True"
                                WidthRequest="350"

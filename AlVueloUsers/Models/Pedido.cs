@@ -32,6 +32,9 @@ namespace AlVueloUsers.Models
         [Column("metodo_pago")]
         public string MetodoPago { get; set; }
 
+        [Column("pin")]
+        public string Pin { get; set; }
+
         // Relación con los detalles
         public List<DetallePedido> Detalles { get; set; } = new List<DetallePedido>();
     }

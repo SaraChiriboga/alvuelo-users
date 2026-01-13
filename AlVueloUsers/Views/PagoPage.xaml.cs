@@ -367,57 +367,61 @@ namespace AlVueloUsers.Views
             }
 
             // --- ESTADO DE CARGA (UX) ---
-            // Guardamos el texto original para restaurarlo si falla
             string textoOriginal = BtnPagar.Text;
 
-            // Cambios visuales en el botón
-            BtnPagar.Text = "";              // Ocultar texto "Pagar"
-            BtnPagar.IsEnabled = false;      // Evitar doble clic
-            SpinnerCarga.IsVisible = true;   // Mostrar ruedita
-            SpinnerCarga.IsRunning = true;   // Girar ruedita
-                                             // ----------------------------
+            // Cambios visuales
+            BtnPagar.Text = "";
+            BtnPagar.IsEnabled = false;
+            SpinnerCarga.IsVisible = true;
+            SpinnerCarga.IsRunning = true;
+            // ----------------------------
 
             try
             {
                 bool pagoAprobado = false;
+                string pinParaEnviar = ""; // <--- VARIABLE PARA GUARDAR EL PIN
 
                 if (_metodoPagoSeleccionadoActual == GridMetodo_Tarjeta)
                 {
-                    // Lógica de PayPal (Tu código ya corregido)
+                    // --- Lógica de PayPal ---
                     var tarjetaInfo = await ObtenerTarjetaParaPago("C001");
                     if (tarjetaInfo != null)
                     {
                         var servicio = new PayPalService();
+                        // Nota: Asegúrate de usar el Total real, aquí puse 7.54m fijo como en tu ejemplo
                         var resultado = await servicio.ProcesarPago(7.54m, tarjetaInfo.NumTarjeta, tarjetaInfo.FechaExpiracion, tarjetaInfo.Cvv, tarjetaInfo.NombreTitular);
 
                         if (resultado.Exito)
                         {
                             pagoAprobado = true;
-                            await RegistrarPedidoEnBD("Pagado (PayPal)");
+                            // CAPTURAMOS EL PIN AL REGISTRAR
+                            pinParaEnviar = await RegistrarPedidoEnBD("Pagado (PayPal)");
                         }
                         else
                         {
                             await DisplayAlert("Error", resultado.Mensaje, "OK");
                         }
                     }
+                    else
+                    {
+                        await DisplayAlert("Error", "No se encontró la información de la tarjeta", "OK");
+                    }
                 }
                 else
                 {
-                    // Efectivo / Transferencia
-                    pagoAprobado = true; // Asumimos éxito inmediato para estos métodos
-                    await RegistrarPedidoEnBD("Pendiente de pago");
+                    // --- Efectivo / Transferencia ---
+                    pagoAprobado = true; // Asumimos éxito inmediato
+
+                    // CAPTURAMOS EL PIN AL REGISTRAR
+                    pinParaEnviar = await RegistrarPedidoEnBD("Pendiente de pago");
                 }
 
-                // --- NAVEGACIÓN A LA ANIMACIÓN ---
+                // --- NAVEGACIÓN ---
                 if (pagoAprobado)
                 {
-                    // Aquí es donde vamos a la pantalla 'Preciosa' de Lottie
-                    // Usamos MainPager para borrar el historial y que no puedan volver atrás
-                    await Navigation.PushModalAsync(new PagoExitosoPage());
-                }
-                else
-                {
-                    // Si falló (y no entró al if de arriba), restauramos el botón en el 'finally'
+                    // Pasamos el PIN capturado a la página de éxito
+                    // IMPORTANTE: Debes actualizar el constructor de PagoExitosoEntregaPage para recibir el string
+                    await Navigation.PushModalAsync(new PagoExitosoEntregaPage(pinParaEnviar));
                 }
             }
             catch (Exception ex)
@@ -426,11 +430,11 @@ namespace AlVueloUsers.Views
             }
             finally
             {
-                // Solo restauramos el botón si NO nos fuimos de la página (es decir, si hubo error)
-                // Verificamos si seguimos en esta pantalla para evitar errores visuales
+                // Solo restauramos el botón si NO nos fuimos de la página (hubo error o no se aprobó)
+                // Verificamos si seguimos en esta pantalla
                 if (Application.Current.MainPage is not NavigationPage nav || nav.CurrentPage is PagoPage)
                 {
-                    BtnPagar.Text = textoOriginal; // "Pagar $7.54"
+                    BtnPagar.Text = textoOriginal;
                     BtnPagar.IsEnabled = true;
                     SpinnerCarga.IsVisible = false;
                     SpinnerCarga.IsRunning = false;
@@ -451,11 +455,15 @@ namespace AlVueloUsers.Views
             }
         }
 
-        // CAMBIA 'void' por 'Task'
-        private async Task RegistrarPedidoEnBD(string estadoFinal)
+        // Cambiamos 'Task' por 'Task<string>' para devolver el PIN generado
+        private async Task<string> RegistrarPedidoEnBD(string estadoFinal)
         {
             using (var db = new AlVueloDbContext())
             {
+                // 1. Generar el PIN aquí
+                var random = new Random();
+                string pinGenerado = random.Next(0, 10000).ToString("D4"); // Ej: "0482"
+
                 var nuevoPedido = new Pedido
                 {
                     ClienteId = "C001",
@@ -463,11 +471,17 @@ namespace AlVueloUsers.Views
                     Total = 7.54m,
                     Estado = "Pendiente",
                     TipoServicio = $"Entrega campus ({PickerCampus.SelectedItem})",
-                    MetodoPago = estadoFinal
+                    MetodoPago = estadoFinal,
+
+                    // 2. Guardamos el PIN en el objeto
+                    Pin = pinGenerado
                 };
 
                 db.Pedidos.Add(nuevoPedido);
-                db.SaveChanges();
+                await db.SaveChangesAsync(); // Nota: Usa SaveChangesAsync para no bloquear
+
+                // 3. Devolvemos el PIN para usarlo en la navegación
+                return pinGenerado;
             }
         }
 
