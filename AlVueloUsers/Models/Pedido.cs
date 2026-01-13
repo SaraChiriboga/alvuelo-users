@@ -35,6 +35,8 @@ namespace AlVueloUsers.Models
         [Column("pin")]
         public string Pin { get; set; }
 
+        [Column("mesa_asignada")]
+        public string? MesaAsignada { get; set; }
         // Relación con los detalles
         public List<DetallePedido> Detalles { get; set; } = new List<DetallePedido>();
     }

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
+             x:Class="AlVueloUsers.Views.PagoExitosoRetiroPage"
+             BackgroundColor="{StaticResource AlVueloRed}"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid>
+        <VerticalStackLayout VerticalOptions="Center" 
+                             HorizontalOptions="Center" 
+                             Spacing="20"
+                             Padding="30">
+
+            <skia:SKLottieView x:Name="LottieAnimacion"
+                               Source="success_pickup.json"
+                               RepeatCount="-1"
+                               IsAnimationEnabled="True"
+                               WidthRequest="250"
+                               HeightRequest="200"
+                               HorizontalOptions="Center" />
+
+            <Label Text="¡Pedido Confirmado!"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="White" 
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Opacity="0"
+                   x:Name="LabelTitulo"/>
+
+            <Label Text="Tu orden se está preparando. Muestra este código en caja al retirar:"
+                   FontSize="16"
+                   TextColor="#F0F0F0"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Opacity="0"
+                   x:Name="LabelSubtitulo"/>
+
+            <Border x:Name="BorderPin"
+                    Stroke="White"
+                    StrokeThickness="2"
+                    WidthRequest="270"
+                    StrokeDashArray="10,5"
+                    BackgroundColor="#33FFFFFF"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="30,10"
+                    HorizontalOptions="Center"
+                    Opacity="0">
+                <VerticalStackLayout Spacing="0">
+                    <Label Text="PIN DE RETIRO" 
+                           TextColor="White" 
+                           FontSize="12" 
+                           HorizontalTextAlignment="Center" 
+                           Opacity="0.8"/>
+
+                    <Label x:Name="LabelPin"
+                           Text="0000"
+                           FontSize="42"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"
+                           CharacterSpacing="4"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Entendido"
+                    BackgroundColor="White"
+                    TextColor="{StaticResource AlVueloRed}"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    WidthRequest="270"
+                    Margin="0,20,0,0"
+                    Opacity="0"
+                    x:Name="BotonInicio"
+                    Clicked="OnEntendidoClicked"/>
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

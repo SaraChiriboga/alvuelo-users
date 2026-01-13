@@ -194,9 +194,31 @@ namespace AlVueloUsers.Views
                     pinParaEnviar = await RegistrarPedidoEnBD("Pendiente de pago", totalFinal);
                 }
 
+                // --- LÓGICA DE NAVEGACIÓN CORREGIDA ---
                 if (pagoAprobado)
                 {
-                    await Navigation.PushModalAsync(new PagoExitosoEntregaPage(pinParaEnviar));
+                    // 1. SI ES CONSUMO EN LOCAL -> IR A SELECCIONAR MESA (Pasando el PIN)
+                    if (_servicioSeleccionadoActual == BorderConsumo)
+                    {
+                        // Navegamos a la selección de mesa en lugar de la pantalla de éxito
+                        await Navigation.PushAsync(new SeleccionMesaPage(pinParaEnviar));
+                    }
+                    // 2. SI ES ENTREGA O RETIRO -> IR A PANTALLA DE ÉXITO DIRECTAMENTE
+                    else
+                    {
+                        Page paginaDestino;
+
+                        if (_servicioSeleccionadoActual == BorderCampus)
+                        {
+                            paginaDestino = new PagoExitosoEntregaPage(pinParaEnviar);
+                        }
+                        else // Retiro
+                        {
+                            paginaDestino = new PagoExitosoRetiroPage(pinParaEnviar);
+                        }
+
+                        await Navigation.PushModalAsync(paginaDestino);
+                    }
                 }
             }
             catch (Exception ex)
@@ -486,13 +508,29 @@ namespace AlVueloUsers.Views
                     var random = new Random();
                     string pinGenerado = random.Next(0, 10000).ToString("D4");
 
+                    // Determinar el string correcto para el Tipo de Servicio
+                    string nombreServicio = "Desconocido";
+
+                    if (_servicioSeleccionadoActual == BorderCampus)
+                    {
+                        nombreServicio = $"Entrega campus ({PickerCampus.SelectedItem})";
+                    }
+                    else if (_servicioSeleccionadoActual == BorderRetiro)
+                    {
+                        nombreServicio = "Retiro en Restaurante";
+                    }
+                    else if (_servicioSeleccionadoActual == BorderConsumo)
+                    {
+                        nombreServicio = "Consumo en Restaurante";
+                    }
+
                     var nuevoPedido = new Pedido
                     {
                         ClienteId = "C001",
                         RestauranteId = "UPO1",
                         Total = totalReal,
                         Estado = "Pendiente",
-                        TipoServicio = $"Entrega ({PickerCampus.SelectedItem})",
+                        TipoServicio = nombreServicio, // Usamos la variable calculada arriba
                         MetodoPago = estadoFinal,
                         Pin = pinGenerado
                     };
@@ -505,7 +543,7 @@ namespace AlVueloUsers.Views
             }
             catch
             {
-                return "0000"; // Fallback PIN
+                return "0000";
             }
         }
     }

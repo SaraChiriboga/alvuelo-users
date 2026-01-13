@@ -12,6 +12,8 @@ namespace AlVueloUsers.Data
 
         public DbSet<ClienteTarjeta> ClientesTarjetas { get; set; }
 
+        public DbSet<Mesa> Mesas { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (optionsBuilder.IsConfigured)
