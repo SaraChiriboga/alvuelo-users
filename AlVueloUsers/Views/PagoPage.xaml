@@ -237,31 +237,44 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <Border Grid.Row="2" Padding="20,12,20,20" StrokeThickness="0" Shadow="{Shadow Brush=Black, Offset='0,-2', Radius=12, Opacity=0.08}">
-            <Grid HeightRequest="56">
-                <Button x:Name="BtnPagar"
-                        Text="Confirmar y Pagar" 
-                        BackgroundColor="{StaticResource AlVueloDarkRed}"
-                        TextColor="White"
-                        CornerRadius="14"
-                        FontAttributes="Bold"
-                        FontSize="17"
-                        Clicked="OnPagarClicked"
-                        Shadow="{Shadow Brush={StaticResource AlVueloDarkRed}, Offset='0,4', Radius=12, Opacity=0.3}"/>
+        <VerticalStackLayout Grid.Row="2" Spacing="0" Background="Transparent">
 
-                <ActivityIndicator x:Name="SpinnerCarga"
-                                   IsRunning="False"
-                                   IsVisible="False"
-                                   Color="White"
-                                   WidthRequest="32"
-                                   HeightRequest="32"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   InputTransparent="True"
-                                   ZIndex="99"/>
-            </Grid>
-        </Border>
+            <Border x:Name="BadgeError"
+                    IsVisible="False"
+                    Opacity="0"
+                    BackgroundColor="#FFEBEE"
+                    Stroke="#FFCDD2"
+                    StrokeThickness="1"
+                    Padding="12,8"
+                    Margin="20,0,20,10"
+                    HorizontalOptions="Fill"
+                    StrokeShape="RoundRectangle 10"
+                    Shadow="{Shadow Brush=Black, Offset='0,2', Radius=5, Opacity=0.1}">
+                <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label FontFamily="FASolid" Text="&#xf06a;" TextColor="#D32F2F" FontSize="14" VerticalOptions="Center"/>
+                    <Label x:Name="LabelMensajeError" Text="Error de pago" TextColor="#D32F2F" FontSize="13" FontAttributes="Bold" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Border>
 
-        <Grid x:Name="LoadingOverlay" Grid.RowSpan="3" BackgroundColor="#CC000000" IsVisible="False" />
+            <Border Padding="20,12,20,20" StrokeThickness="0" Shadow="{Shadow Brush=Black, Offset='0,-2', Radius=12, Opacity=0.08}">
+                <Grid HeightRequest="56">
+                    <Button x:Name="BtnPagar"
+                            Text="Confirmar y Pagar" 
+                            BackgroundColor="{StaticResource AlVueloDarkRed}"
+                            TextColor="White"
+                            CornerRadius="14"
+                            FontSize="17"
+                            FontAttributes="Bold"
+                            Clicked="OnPagarClicked"/>
+
+                    <ActivityIndicator x:Name="SpinnerCarga"
+                                       IsRunning="False"
+                                       IsVisible="False"
+                                       Color="White"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+        </VerticalStackLayout>
     </Grid>
 </ContentPage>

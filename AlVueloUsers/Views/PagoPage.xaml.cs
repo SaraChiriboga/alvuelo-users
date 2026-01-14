@@ -130,21 +130,38 @@ namespace AlVueloUsers.Views
             await layout.ScaleTo(1.0, 50);
         }
 
+        // --- LÓGICA DEL FLOATING BADGE (NUEVO) ---
+        private async void MostrarErrorBadge(string mensaje)
+        {
+            LabelMensajeError.Text = mensaje;
+            BadgeError.IsVisible = true;
+            BadgeError.TranslationY = 15; // Offset para la animación
+
+            // Animación de entrada
+            await Task.WhenAll(
+                BadgeError.FadeTo(1, 250, Easing.CubicOut),
+                BadgeError.TranslateTo(0, 0, 250, Easing.CubicOut)
+            );
+
+            await Task.Delay(3500); // Se queda visible 3.5 segundos
+
+            // Animación de salida
+            await BadgeError.FadeTo(0, 300, Easing.CubicIn);
+            BadgeError.IsVisible = false;
+        }
+
         private async void OnPagarClicked(object sender, EventArgs e)
         {
             if (_metodoPagoSeleccionadoActual == null)
             {
-                await DisplayAlert("Error", "Selecciona un método de pago.", "OK");
+                MostrarErrorBadge("Selecciona un método de pago.");
                 return;
             }
 
-            // Calcular Total Final al momento del clic
             decimal totalFinal = _subtotalProductos + _tarifaServicio + _costoEnvio;
-
-            // Guardar estado visual del botón
             string textoOriginal = BtnPagar.Text;
 
-            // Poner UI en estado de carga
+            // Estado de carga
             BtnPagar.Text = "";
             BtnPagar.IsEnabled = false;
             SpinnerCarga.IsVisible = true;
@@ -158,19 +175,10 @@ namespace AlVueloUsers.Views
                 if (_metodoPagoSeleccionadoActual == GridMetodo_Tarjeta)
                 {
                     var tarjetaInfo = await ObtenerTarjetaParaPago("C001");
-
                     if (tarjetaInfo != null)
                     {
                         var servicio = new PayPalService();
-
-                        // Llamada al servicio con el TOTAL DINÁMICO
-                        var resultado = await servicio.ProcesarPago(
-                            totalFinal,
-                            tarjetaInfo.NumTarjeta,
-                            tarjetaInfo.FechaExpiracion,
-                            tarjetaInfo.Cvv,
-                            tarjetaInfo.NombreTitular
-                        );
+                        var resultado = await servicio.ProcesarPago(totalFinal, tarjetaInfo.NumTarjeta, tarjetaInfo.FechaExpiracion, tarjetaInfo.Cvv, tarjetaInfo.NombreTitular);
 
                         if (resultado.Exito)
                         {
@@ -179,62 +187,43 @@ namespace AlVueloUsers.Views
                         }
                         else
                         {
-                            await DisplayAlert("Error", resultado.Mensaje, "OK");
+                            // En lugar de alerta, mostramos el badge
+                            MostrarErrorBadge(resultado.Mensaje);
                         }
                     }
                     else
                     {
-                        await DisplayAlert("Error", "No se encontró tarjeta guardada.", "OK");
+                        MostrarErrorBadge("No se encontró tarjeta guardada.");
                     }
                 }
                 else
                 {
-                    // Lógica para Efectivo o Transferencia
                     pagoAprobado = true;
-                    pinParaEnviar = await RegistrarPedidoEnBD("Pendiente de pago", totalFinal);
+                    pinParaEnviar = await RegistrarPedidoEnBD("Pendiente", totalFinal);
                 }
 
-                // --- LÓGICA DE NAVEGACIÓN CORREGIDA ---
                 if (pagoAprobado)
                 {
-                    // 1. SI ES CONSUMO EN LOCAL -> IR A SELECCIONAR MESA (Pasando el PIN)
                     if (_servicioSeleccionadoActual == BorderConsumo)
-                    {
-                        // Navegamos a la selección de mesa en lugar de la pantalla de éxito
                         await Navigation.PushAsync(new SeleccionMesaPage(pinParaEnviar));
-                    }
-                    // 2. SI ES ENTREGA O RETIRO -> IR A PANTALLA DE ÉXITO DIRECTAMENTE
                     else
                     {
-                        Page paginaDestino;
-
-                        if (_servicioSeleccionadoActual == BorderCampus)
-                        {
-                            paginaDestino = new PagoExitosoEntregaPage(pinParaEnviar);
-                        }
-                        else // Retiro
-                        {
-                            paginaDestino = new PagoExitosoRetiroPage(pinParaEnviar);
-                        }
-
-                        await Navigation.PushModalAsync(paginaDestino);
+                        Page destino = (_servicioSeleccionadoActual == BorderCampus) ?
+                            new PagoExitosoEntregaPage(pinParaEnviar) : new PagoExitosoRetiroPage(pinParaEnviar);
+                        await Navigation.PushModalAsync(destino);
                     }
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", ex.Message, "OK");
+                MostrarErrorBadge("Error de sistema: " + ex.Message);
             }
             finally
             {
-                // Restaurar botón si seguimos en la misma página
-                if (Application.Current.MainPage is not NavigationPage nav || nav.CurrentPage is PagoPage)
-                {
-                    BtnPagar.Text = textoOriginal;
-                    BtnPagar.IsEnabled = true;
-                    SpinnerCarga.IsVisible = false;
-                    SpinnerCarga.IsRunning = false;
-                }
+                BtnPagar.Text = textoOriginal;
+                BtnPagar.IsEnabled = true;
+                SpinnerCarga.IsVisible = false;
+                SpinnerCarga.IsRunning = false;
             }
         }
 

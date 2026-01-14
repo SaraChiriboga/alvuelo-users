@@ -107,25 +107,25 @@ namespace AlVueloUsers.Views
 
         private async Task CargarRutaEnMapa()
         {
-            // Coordenadas
-            var locationRestaurante = new Location(-0.1715, -78.4755); // UPO1 (Ejemplo)
+            // 1. Definición de ubicaciones (Basado en tu lógica actual)
+            var locationRestaurante = new Location(-0.16702626643783738, -78.47260021767912);
             Location locationDestino;
 
-            // Definir coordenadas según el campus detectado
             switch (_campusDestino)
             {
                 case "Granados":
-                    locationDestino = new Location(-0.1715, -78.4755);
+                    locationDestino = new Location(-0.16702626643783738, -78.47260021767912);
                     break;
                 case "Colón":
-                    locationDestino = new Location(-0.2014, -78.4912);
+                    locationDestino = new Location(-0.20219042440720753, -78.48516636000674);
                     break;
                 case "UdlaPark":
                 default:
-                    locationDestino = new Location(-0.1663, -78.4633);
+                    locationDestino = new Location(-0.1624045967290203, -78.45930403487641);
                     break;
             }
 
+            // 2. Limpieza y marcado de Pines iniciales
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 if (MapaSeguimiento == null) return;
@@ -133,7 +133,6 @@ namespace AlVueloUsers.Views
                 MapaSeguimiento.Pins.Clear();
                 MapaSeguimiento.MapElements.Clear();
 
-                // Pin Restaurante
                 MapaSeguimiento.Pins.Add(new Pin
                 {
                     Label = "AlVuelo Restaurant",
@@ -142,7 +141,6 @@ namespace AlVueloUsers.Views
                     Location = locationRestaurante
                 });
 
-                // Pin Destino
                 MapaSeguimiento.Pins.Add(new Pin
                 {
                     Label = "Tu ubicación",
@@ -152,7 +150,7 @@ namespace AlVueloUsers.Views
                 });
             });
 
-            // Obtener ruta de Google API
+            // 3. Obtención y dibujo de la ruta
             try
             {
                 string json = await ObtenerRutaGoogle(
@@ -174,13 +172,14 @@ namespace AlVueloUsers.Views
                             string distanciaTexto = leg.GetProperty("distance").GetProperty("text").GetString();
                             string encodedPolyline = route.GetProperty("overview_polyline").GetProperty("points").GetString();
 
+                            // Actualizar etiquetas de UI
                             MainThread.BeginInvokeOnMainThread(() =>
                             {
                                 LabelDistancia.Text = distanciaTexto;
                                 CalcularTiempoEstimado(tiempoTexto);
                             });
 
-                            // Dibujar Polilínea
+                            // Decodificar y dibujar polilínea
                             var puntosRuta = GooglePolylineHelper.Decode(encodedPolyline);
 
                             await MainThread.InvokeOnMainThreadAsync(() =>
@@ -196,14 +195,25 @@ namespace AlVueloUsers.Views
 
                                 MapaSeguimiento.MapElements.Add(lineaRuta);
 
-                                // Zoom para ver toda la ruta
+                                // --- LÓGICA DE ENCUADRE DINÁMICO ---
+
+                                // Calculamos el centro geográfico entre los dos puntos
                                 var centerLat = (locationRestaurante.Latitude + locationDestino.Latitude) / 2;
                                 var centerLon = (locationRestaurante.Longitude + locationDestino.Longitude) / 2;
 
-                                // Ajustar el radio del zoom un poco más amplio
-                                MapaSeguimiento.MoveToRegion(MapSpan.FromCenterAndRadius(
-                                    new Location(centerLat, centerLon),
-                                    Distance.FromKilometers(3)));
+                                // Calculamos el Span (la distancia visual que cubrirá el mapa)
+                                // Usamos un multiplicador (1.8) para que los pines no queden en el borde exacto
+                                double latDelta = Math.Abs(locationRestaurante.Latitude - locationDestino.Latitude) * 1.8;
+                                double lonDelta = Math.Abs(locationRestaurante.Longitude - locationDestino.Longitude) * 1.8;
+
+                                // AJUSTE PARA EL ESPACIO VISIBLE:
+                                // Como el BottomSheet ocupa la parte inferior, restamos un porcentaje de la latitud
+                                // al centro para "empujar" la cámara hacia abajo, lo que hace que la ruta suba en pantalla.
+                                double visualOffset = latDelta * 0.35;
+                                var adjustedCenter = new Location(centerLat - visualOffset, centerLon);
+
+                                // Aplicamos la nueva región
+                                MapaSeguimiento.MoveToRegion(new MapSpan(adjustedCenter, latDelta, lonDelta));
                             });
                         }
                     }
@@ -212,7 +222,6 @@ namespace AlVueloUsers.Views
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error ruta Google: {ex.Message}");
-                // Fallback visual si falla Google API (Línea recta)
                 DibujarLineaRectaFallback(locationRestaurante, locationDestino);
             }
         }
@@ -367,7 +376,7 @@ namespace AlVueloUsers.Views
             try
             {
                 if (PhoneDialer.Default.IsSupported)
-                    PhoneDialer.Default.Open("0991234567");
+                    PhoneDialer.Default.Open("0979146876");
             }
             catch
             {

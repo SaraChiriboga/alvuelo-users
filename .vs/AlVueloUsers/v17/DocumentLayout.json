@@ -3,14 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|c:\\users\\saril\\desktop\\progra4\\alvuelousers\\alvuelousers\\views\\pagoexitosoconsumopage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\views\\pagoexitosoconsumopage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|c:\\users\\saril\\desktop\\progra4\\alvuelousers\\alvuelousers\\views\\pagoexitosoretiropage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\views\\pagoexitosoretiropage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|c:\\users\\saril\\desktop\\progra4\\alvuelousers\\alvuelousers\\views\\pagopage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\views\\pagopage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
@@ -19,8 +11,32 @@
       "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\views\\pagopage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|c:\\users\\saril\\desktop\\progra4\\alvuelousers\\alvuelousers\\views\\pagoexitosoretiropage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\views\\pagoexitosoretiropage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|c:\\users\\saril\\desktop\\progra4\\alvuelousers\\alvuelousers\\resources\\styles\\styles.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\resources\\styles\\styles.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|c:\\users\\saril\\desktop\\progra4\\alvuelousers\\alvuelousers\\alvuelousers.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\alvuelousers.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|c:\\users\\saril\\desktop\\progra4\\alvuelousers\\alvuelousers\\views\\seguimientoentregapage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\views\\seguimientoentregapage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|c:\\users\\saril\\desktop\\progra4\\alvuelousers\\alvuelousers\\views\\seguimientoentregapage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\views\\seguimientoentregapage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|c:\\users\\saril\\desktop\\progra4\\alvuelousers\\alvuelousers\\services\\paypalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\services\\paypalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|c:\\users\\saril\\desktop\\progra4\\alvuelousers\\alvuelousers\\data\\alvuelodbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\data\\alvuelodbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|c:\\users\\saril\\desktop\\progra4\\alvuelousers\\alvuelousers\\helpers\\googlepolylinehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFD602F4-E884-4177-851A-0F9710B2B819}|AlVueloUsers\\AlVueloUsers.csproj|solutionrelative:alvuelousers\\helpers\\googlepolylinehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -44,71 +60,123 @@
         },
         {
           "DockedWidth": 96,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "PagoExitosoRetiroPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoExitosoRetiroPage.xaml.cs",
-              "RelativeDocumentMoniker": "AlVueloUsers\\Views\\PagoExitosoRetiroPage.xaml.cs",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoExitosoRetiroPage.xaml.cs",
-              "RelativeToolTip": "AlVueloUsers\\Views\\PagoExitosoRetiroPage.xaml.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAAuwD8AAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-13T22:41:17.259Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "PagoPage.xaml",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoPage.xaml",
-              "RelativeDocumentMoniker": "AlVueloUsers\\Views\\PagoPage.xaml",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoPage.xaml",
-              "RelativeToolTip": "AlVueloUsers\\Views\\PagoPage.xaml",
-              "ViewState": "AgIAANQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-01-13T22:54:13.862Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "PagoPage.xaml.cs",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoPage.xaml.cs",
               "RelativeDocumentMoniker": "AlVueloUsers\\Views\\PagoPage.xaml.cs",
               "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoPage.xaml.cs",
               "RelativeToolTip": "AlVueloUsers\\Views\\PagoPage.xaml.cs",
-              "ViewState": "AgIAAGAAAAAAAAAAAAAhwHAAAABYAAAAAAAAAA==",
+              "ViewState": "AgIAAOYAAAAAAAAAAAAswIQAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-13T22:52:43.913Z",
+              "WhenOpened": "2026-01-14T16:51:38.467Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "PagoExitosoConsumoPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoExitosoConsumoPage.xaml.cs",
-              "RelativeDocumentMoniker": "AlVueloUsers\\Views\\PagoExitosoConsumoPage.xaml.cs",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoExitosoConsumoPage.xaml.cs",
-              "RelativeToolTip": "AlVueloUsers\\Views\\PagoExitosoConsumoPage.xaml.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAQwDQAAAAAAAAAAAAAAA==",
+              "Title": "PagoPage.xaml",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoPage.xaml",
+              "RelativeDocumentMoniker": "AlVueloUsers\\Views\\PagoPage.xaml",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoPage.xaml",
+              "RelativeToolTip": "AlVueloUsers\\Views\\PagoPage.xaml",
+              "ViewState": "AgIAAP8AAAAAAAAAAAAAAAIBAACDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-01-14T16:51:31.587Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Styles.xaml",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Resources\\Styles\\Styles.xaml",
+              "RelativeDocumentMoniker": "AlVueloUsers\\Resources\\Styles\\Styles.xaml",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Resources\\Styles\\Styles.xaml",
+              "RelativeToolTip": "AlVueloUsers\\Resources\\Styles\\Styles.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-01-14T16:16:04.75Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AlVueloUsers",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\AlVueloUsers.csproj",
+              "RelativeDocumentMoniker": "AlVueloUsers\\AlVueloUsers.csproj",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\AlVueloUsers.csproj",
+              "RelativeToolTip": "AlVueloUsers\\AlVueloUsers.csproj",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAADMAAABfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-14T16:09:33.189Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PayPalService.cs",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Services\\PayPalService.cs",
+              "RelativeDocumentMoniker": "AlVueloUsers\\Services\\PayPalService.cs",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Services\\PayPalService.cs",
+              "RelativeToolTip": "AlVueloUsers\\Services\\PayPalService.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAYwBoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-13T22:44:47.417Z",
+              "WhenOpened": "2026-01-14T15:59:09.259Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AlVueloDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Data\\AlVueloDbContext.cs",
+              "RelativeDocumentMoniker": "AlVueloUsers\\Data\\AlVueloDbContext.cs",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Data\\AlVueloDbContext.cs",
+              "RelativeToolTip": "AlVueloUsers\\Data\\AlVueloDbContext.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAswCAAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-14T15:45:11.073Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "GooglePolylineHelper.cs",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Helpers\\GooglePolylineHelper.cs",
+              "RelativeDocumentMoniker": "AlVueloUsers\\Helpers\\GooglePolylineHelper.cs",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Helpers\\GooglePolylineHelper.cs",
+              "RelativeToolTip": "AlVueloUsers\\Helpers\\GooglePolylineHelper.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-14T15:45:06.603Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "PagoExitosoRetiroPage.xaml",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoExitosoRetiroPage.xaml",
-              "RelativeDocumentMoniker": "AlVueloUsers\\Views\\PagoExitosoRetiroPage.xaml",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\PagoExitosoRetiroPage.xaml",
-              "RelativeToolTip": "AlVueloUsers\\Views\\PagoExitosoRetiroPage.xaml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "SeguimientoEntregaPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\SeguimientoEntregaPage.xaml.cs",
+              "RelativeDocumentMoniker": "AlVueloUsers\\Views\\SeguimientoEntregaPage.xaml.cs",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\SeguimientoEntregaPage.xaml.cs",
+              "RelativeToolTip": "AlVueloUsers\\Views\\SeguimientoEntregaPage.xaml.cs",
+              "ViewState": "AgIAAIoAAAAAAAAAAADwv+IAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-14T15:33:22.245Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SeguimientoEntregaPage.xaml",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\SeguimientoEntregaPage.xaml",
+              "RelativeDocumentMoniker": "AlVueloUsers\\Views\\SeguimientoEntregaPage.xaml",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\progra4\\AlVueloUsers\\AlVueloUsers\\Views\\SeguimientoEntregaPage.xaml",
+              "RelativeToolTip": "AlVueloUsers\\Views\\SeguimientoEntregaPage.xaml",
+              "ViewState": "AgIAAMsAAAAAAAAAAADwv+QAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-01-13T22:41:17.682Z",
+              "WhenOpened": "2026-01-14T14:44:42.466Z",
               "EditorCaption": ""
             }
           ]
