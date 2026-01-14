@@ -154,66 +154,83 @@ namespace AlVueloUsers.Views
             IconoTipoTarjeta.IsVisible = false;
         }
 
-        // --- LÓGICA DE PAGO BLINDADA ---
+        // --- LÓGICA DEL FLOATING BADGE (NUEVO) ---
+        private async void MostrarErrorBadge(string mensaje)
+        {
+            LabelMensajeError.Text = mensaje;
+            BadgeError.IsVisible = true;
+            BadgeError.TranslationY = 15;
+
+            // Animación de entrada
+            await Task.WhenAll(
+                BadgeError.FadeTo(1, 250, Easing.CubicOut),
+                BadgeError.TranslateTo(0, 0, 250, Easing.CubicOut)
+            );
+
+            await Task.Delay(3500);
+
+            // Animación de salida
+            await BadgeError.FadeTo(0, 300, Easing.CubicIn);
+            BadgeError.IsVisible = false;
+        }
+
         private async void OnPagarClicked(object sender, EventArgs e)
         {
-            if (!ValidarCampos()) return;
+            if (!ValidarCampos())
+            {
+                MostrarErrorBadge("Por favor, completa todos los campos correctamente.");
+                return;
+            }
 
             string textoOriginal = BtnPagar.Text ?? "Pagar";
 
             try
             {
-                // UI: Bloquear
+                // UI: Bloquear y cargar
                 BtnPagar.Text = "";
                 BtnPagar.IsEnabled = false;
                 SpinnerCarga.IsVisible = true;
                 SpinnerCarga.IsRunning = true;
 
-                await Task.Delay(50);
-
-                // RECOPILACIÓN SEGURA DE DATOS (Evita Object Reference Not Set)
+                // RECOPILACIÓN SEGURA DE DATOS
                 string numeroLimpio = (EntryNumeroTarjeta.Text ?? "").Replace(" ", "");
                 string titular = (EntryNombreTitular.Text ?? "").ToUpper();
                 string fecha = EntryFechaExpiracion.Text ?? "";
                 string cvv = EntryCvv.Text ?? "";
 
-                // 1. GUARDAR EN BD (Si Switch está activo)
+                // 1. GUARDAR EN BD (Si el usuario lo solicitó)
                 string tarjetaGuardadaNum = null;
                 if (SwitchGuardarTarjeta.IsToggled)
                 {
-                    // Llamamos al método blindado
                     tarjetaGuardadaNum = await GuardarTarjetaEnBD(numeroLimpio, titular, fecha, cvv);
                 }
 
                 // 2. PROCESAR CON PAYPAL API
-                // Usamos una variable var para recibir la tupla (bool Exito, string Mensaje)
                 var resultadoPago = await _paypalService.ProcesarPagoConTarjeta(
                     _montoAPagar, numeroLimpio, titular, fecha, cvv, _tipoTarjeta
                 );
 
                 if (resultadoPago.Exito)
                 {
-                    string pinGenerado = await CrearPedido(tarjetaGuardadaNum);
+                    string pinGenerado = await CrearPedido(numeroLimpio); // Usamos el número real del pago
 
-                    // Navegar a éxito
+                    // Navegación exitosa (Modal)
                     await Navigation.PushModalAsync(new PagoExitosoEntregaPage(pinGenerado));
-
-                    // Retornamos para no ejecutar el finally visual que restauraría el botón
                     return;
                 }
                 else
                 {
-                    // Mostramos el mensaje exacto que nos dio PayPal
-                    await DisplayAlert("Pago Rechazado", $"PayPal dice: {resultadoPago.Mensaje}", "OK");
+                    // En lugar de alerta, mostramos el Badge con el error de PayPal
+                    MostrarErrorBadge(resultadoPago.Mensaje);
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Ocurrió un error inesperado: {ex.Message}", "OK");
+                MostrarErrorBadge("Error inesperado: " + ex.Message);
             }
             finally
             {
-                // Restaurar botón (solo si seguimos en esta página)
+                // Solo restauramos si la página sigue activa
                 if (this.IsLoaded)
                 {
                     BtnPagar.Text = textoOriginal;
@@ -223,7 +240,6 @@ namespace AlVueloUsers.Views
                 }
             }
         }
-
         private bool ValidarCampos()
         {
             if (string.IsNullOrEmpty(EntryNumeroTarjeta.Text) || EntryNumeroTarjeta.Text.Length < 16) return false;
