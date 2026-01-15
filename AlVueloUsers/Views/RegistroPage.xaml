@@ -2,120 +2,338 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AlVueloUsers.Views.RegistroPage"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="White">
 
-    <ContentPage.Background>
-        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="White" Offset="0.1"/>
-            <GradientStop Color="#F8F9FA" Offset="1.0"/>
-        </LinearGradientBrush>
-    </ContentPage.Background>
+    <Grid RowDefinitions="Auto,*">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="30,40,30,30" Spacing="0">
-
-            <ImageButton Source="back_icon.png"
-                         HorizontalOptions="Start"
-                         WidthRequest="30"
-                         BackgroundColor="Transparent"
-                         Margin="0,0,0,20"
-                         Clicked="OnBackClicked"/>
-
-            <Image Source="logo.png"
-                   HeightRequest="80"
-                   HorizontalOptions="Center"
-                   Margin="0,0,0,0"/>
-
-            <Label Text="Crear Cuenta"
-                   FontSize="28"
-                   FontAttributes="Bold"
-                   TextColor="{StaticResource Primary}"
-                   HorizontalOptions="Center"
-                   FontFamily="Inter"/>
-
-            <Label Text="Únete a la comunidad de ALVUELO"
-                   FontSize="15"
-                   TextColor="{StaticResource TextLight}"
-                   HorizontalOptions="Center"
-                   Margin="0,5,0,30"/>
-
-            <Border BackgroundColor="White"
-                    Padding="25"
-                    StrokeThickness="0">
+        <!-- Header con forma curva roja -->
+        <Grid Grid.Row="0" HeightRequest="280">
+            <!-- Fondo rojo con curva -->
+            <Border BackgroundColor="{StaticResource AlVueloRed}"
+                    VerticalOptions="Start"
+                    HeightRequest="200">
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="30"/>
+                    <RoundRectangle CornerRadius="0,0,500,500"/>
                 </Border.StrokeShape>
-                <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,10" Radius="20" Opacity="0.05"/>
-                </Border.Shadow>
-
-                <VerticalStackLayout Spacing="15">
-
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="ID Banner / Cédula" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextDark}"/>
-                        <Border Stroke="{StaticResource Gray200}" StrokeThickness="1">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="12"/>
-                            </Border.StrokeShape>
-                            <Entry x:Name="txtId" Placeholder="A00XXXX / 17XXXXXXXX" HeightRequest="45" Margin="10,0"/>
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Correo Institucional" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextDark}"/>
-                        <Border Stroke="{StaticResource Gray200}" StrokeThickness="1">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="12"/>
-                            </Border.StrokeShape>
-                            <Entry x:Name="txtCorreo" Placeholder="usuario@udla.edu.ec" Keyboard="Email" HeightRequest="45" Margin="10,0"/>
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Contraseña" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextDark}"/>
-                        <Border Stroke="{StaticResource Gray200}" StrokeThickness="1">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="12"/>
-                            </Border.StrokeShape>
-                            <Entry x:Name="txtPassword" IsPassword="True" Placeholder="Mínimo 6 caracteres" HeightRequest="45" Margin="10,0"/>
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Número de Celular" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextDark}"/>
-                        <Border Stroke="{StaticResource Gray200}" StrokeThickness="1">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="12"/>
-                            </Border.StrokeShape>
-                            <Entry x:Name="txtCelular" Placeholder="09XXXXXXXX" Keyboard="Telephone" HeightRequest="45" Margin="10,0"/>
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <Button Text="Finalizar Registro"
-                            Clicked="OnContinuarClicked"
-                            BackgroundColor="{StaticResource Primary}"
-                            TextColor="White"
-                            CornerRadius="15"
-                            HeightRequest="55"
-                            FontAttributes="Bold"
-                            FontSize="17"
-                            Margin="0,20,0,0"/>
-
-                </VerticalStackLayout>
+                <Image Source="splash.png"
+                       WidthRequest="500"/>
             </Border>
 
-            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,30,0,0" Spacing="5">
-                <Label Text="¿Ya tienes cuenta?" TextColor="{StaticResource TextLight}"/>
-                <Label Text="Inicia Sesión" 
-                       TextColor="{StaticResource Primary}" 
-                       FontAttributes="Bold"
-                       TextDecorations="Underline">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnBackClicked"/>
-                    </Label.GestureRecognizers>
-                </Label>
-            </HorizontalStackLayout>
+            <!-- Botón Volver -->
+            <ImageButton Source="back_arrow.png"
+                         WidthRequest="32"
+                         HeightRequest="32"
+                         BackgroundColor="Transparent"
+                         Clicked="OnBackClicked"
+                         HorizontalOptions="Start"
+                         VerticalOptions="Start"
+                         Margin="20,40,0,0">
+                <ImageButton.Shadow>
+                    <Shadow Brush="Black" Offset="0,2" Radius="8" Opacity="0.2"/>
+                </ImageButton.Shadow>
+            </ImageButton>
+        </Grid>
 
-        </VerticalStackLayout>
-    </ScrollView>
+        <!-- Contenido principal -->
+        <ScrollView Grid.Row="1" Margin="0,-40,0,0">
+            <VerticalStackLayout Padding="40,0" Spacing="20">
+
+                <!-- Título -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Crear Cuenta"
+                           FontSize="30"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource AlVueloDarkRed}"
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label Text="Regístrate para comenzar"
+                           FontSize="15"
+                           TextColor="{StaticResource TextSecondary}"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Campo Identificación -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Identificación"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource AlVueloDarkRed}"/>
+                    <Border Stroke="{StaticResource SeparatorGray}" 
+                            StrokeThickness="1.5" 
+                            BackgroundColor="White">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="50,*" Padding="5,0,15,0">
+                            <Label FontFamily="FASolid" 
+                                   Text="&#xf2bb;" 
+                                   TextColor="#1a1a1a"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                            <Entry Grid.Column="1"
+                                   x:Name="txtIdentificacion"
+                                   Placeholder="Ej: 1234567890"
+                                   PlaceholderColor="{StaticResource TextSecondary}"
+                                   TextColor="{StaticResource AlVueloBlack}"
+                                   Keyboard="Numeric"
+                                   MaxLength="10"
+                                   HeightRequest="50"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="Transparent"/>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Campo ID Banner -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="ID Banner"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource AlVueloDarkRed}"/>
+                    <Border Stroke="{StaticResource SeparatorGray}" 
+                            StrokeThickness="1.5" 
+                            BackgroundColor="White">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="50,*" Padding="5,0,15,0">
+                            <Label FontFamily="FASolid" 
+                                   Text="&#xf2c2;" 
+                                   TextColor="#1a1a1a"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                            <Entry Grid.Column="1"
+                                   x:Name="txtIdBanner"
+                                   Placeholder="Ej: 0012345"
+                                   PlaceholderColor="{StaticResource TextSecondary}"
+                                   TextColor="{StaticResource AlVueloBlack}"
+                                   MaxLength="7"
+                                   HeightRequest="50"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="Transparent"/>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Campo Nombre -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Nombre Completo"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource AlVueloDarkRed}"/>
+                    <Border Stroke="{StaticResource SeparatorGray}" 
+                            StrokeThickness="1.5" 
+                            BackgroundColor="White">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="50,*" Padding="5,0,15,0">
+                            <Label FontFamily="FASolid" 
+                                   Text="&#xf007;" 
+                                   TextColor="#1a1a1a"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                            <Entry Grid.Column="1"
+                                   x:Name="txtNombre"
+                                   Placeholder="Ej: Juan Pérez"
+                                   PlaceholderColor="{StaticResource TextSecondary}"
+                                   TextColor="{StaticResource AlVueloBlack}"
+                                   HeightRequest="50"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="Transparent"/>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Campo Email -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Correo Institucional"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource AlVueloDarkRed}"/>
+                    <Border Stroke="{StaticResource SeparatorGray}" 
+                            StrokeThickness="1.5" 
+                            BackgroundColor="White">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="50,*" Padding="5,0,15,0">
+                            <Label FontFamily="FASolid" 
+                                   Text="&#xf0e0;" 
+                                   TextColor="#1a1a1a"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                            <Entry Grid.Column="1"
+                                   x:Name="txtCorreo"
+                                   Placeholder="ejemplo@udla.edu.ec"
+                                   PlaceholderColor="{StaticResource TextSecondary}"
+                                   TextColor="{StaticResource AlVueloBlack}"
+                                   Keyboard="Email"
+                                   HeightRequest="50"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="Transparent"/>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Campo Teléfono -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Teléfono"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource AlVueloDarkRed}"/>
+                    <Border Stroke="{StaticResource SeparatorGray}" 
+                            StrokeThickness="1.5" 
+                            BackgroundColor="White">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="50,*" Padding="5,0,15,0">
+                            <Label FontFamily="FASolid" 
+                                   Text="&#xf095;" 
+                                   TextColor="#1a1a1a"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                            <Entry Grid.Column="1"
+                                   x:Name="txtTelefono"
+                                   Placeholder="Ej: 0987654321"
+                                   PlaceholderColor="{StaticResource TextSecondary}"
+                                   TextColor="{StaticResource AlVueloBlack}"
+                                   Keyboard="Telephone"
+                                   MaxLength="10"
+                                   HeightRequest="50"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="Transparent"/>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Campo Contraseña -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Contraseña"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource AlVueloDarkRed}"/>
+                    <Border Stroke="{StaticResource SeparatorGray}" 
+                            StrokeThickness="1.5" 
+                            BackgroundColor="White">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="50,*,40" Padding="5,0,10,0">
+                            <Label FontFamily="FASolid" 
+                                   Text="&#xf084;" 
+                                   TextColor="#1a1a1a"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                            <Entry Grid.Column="1"
+                                   x:Name="txtPassword"
+                                   IsPassword="True"
+                                   Placeholder="Mínimo 6 caracteres"
+                                   PlaceholderColor="{StaticResource TextSecondary}"
+                                   TextColor="{StaticResource AlVueloBlack}"
+                                   MaxLength="25"
+                                   HeightRequest="50"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="Transparent"/>
+                            <ImageButton Grid.Column="2"
+                                         x:Name="btnTogglePassword"
+                                         Source="eye_icon.png"
+                                         WidthRequest="24"
+                                         HeightRequest="24"
+                                         Clicked="OnTogglePasswordClicked"
+                                         BackgroundColor="Transparent"
+                                         VerticalOptions="Center"/>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Campo Confirmar Contraseña -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Confirmar Contraseña"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource AlVueloDarkRed}"/>
+                    <Border Stroke="{StaticResource SeparatorGray}" 
+                            StrokeThickness="1.5" 
+                            BackgroundColor="White">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="50,*,40" Padding="5,0,10,0">
+                            <Label FontFamily="FASolid" 
+                                   Text="&#xf023;" 
+                                   TextColor="#1a1a1a"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                            <Entry Grid.Column="1"
+                                   x:Name="txtConfirmPassword"
+                                   IsPassword="True"
+                                   Placeholder="Repite tu contraseña"
+                                   PlaceholderColor="{StaticResource TextSecondary}"
+                                   TextColor="{StaticResource AlVueloBlack}"
+                                   MaxLength="25"
+                                   HeightRequest="50"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="Transparent"/>
+                            <ImageButton Grid.Column="2"
+                                         x:Name="btnToggleConfirmPassword"
+                                         Source="eye_icon.png"
+                                         WidthRequest="24"
+                                         HeightRequest="24"
+                                         Clicked="OnToggleConfirmPasswordClicked"
+                                         BackgroundColor="Transparent"
+                                         VerticalOptions="Center"/>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Botón Registrarse -->
+                <Button x:Name="btnRegister"
+                        Text="Crear Cuenta"
+                        Clicked="OnRegisterClicked"
+                        BackgroundColor="{StaticResource AlVueloDarkRed}"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="55"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        Margin="0,15,0,0">
+                    <Button.Shadow>
+                        <Shadow Brush="Black" 
+                                Offset="0,4" 
+                                Radius="15" 
+                                Opacity="0.3"/>
+                    </Button.Shadow>
+                </Button>
+
+                <!-- Ya tienes cuenta -->
+                <HorizontalStackLayout Spacing="5" 
+                                       HorizontalOptions="Center"
+                                       Margin="0,15,0,30">
+                    <Label Text="¿Ya tienes cuenta?"
+                           TextColor="{StaticResource TextSecondary}"
+                           FontSize="14"/>
+                    <Label Text="Inicia Sesión"
+                           TextColor="{StaticResource AlVueloRed}"
+                           FontSize="14"
+                           FontAttributes="Bold">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLoginClicked"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
 </ContentPage>
