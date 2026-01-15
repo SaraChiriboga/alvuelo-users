@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AlVueloUsers.Views.RegistroPage"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="White" Offset="0.1"/>
+            <GradientStop Color="#F8F9FA" Offset="1.0"/>
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30,40,30,30" Spacing="0">
+
+            <ImageButton Source="back_icon.png"
+                         HorizontalOptions="Start"
+                         WidthRequest="30"
+                         BackgroundColor="Transparent"
+                         Margin="0,0,0,20"
+                         Clicked="OnBackClicked"/>
+
+            <Image Source="logo.png"
+                   HeightRequest="80"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,0"/>
+
+            <Label Text="Crear Cuenta"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource Primary}"
+                   HorizontalOptions="Center"
+                   FontFamily="Inter"/>
+
+            <Label Text="Únete a la comunidad de ALVUELO"
+                   FontSize="15"
+                   TextColor="{StaticResource TextLight}"
+                   HorizontalOptions="Center"
+                   Margin="0,5,0,30"/>
+
+            <Border BackgroundColor="White"
+                    Padding="25"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="30"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,10" Radius="20" Opacity="0.05"/>
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="15">
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="ID Banner / Cédula" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextDark}"/>
+                        <Border Stroke="{StaticResource Gray200}" StrokeThickness="1">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Entry x:Name="txtId" Placeholder="A00XXXX / 17XXXXXXXX" HeightRequest="45" Margin="10,0"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Correo Institucional" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextDark}"/>
+                        <Border Stroke="{StaticResource Gray200}" StrokeThickness="1">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Entry x:Name="txtCorreo" Placeholder="usuario@udla.edu.ec" Keyboard="Email" HeightRequest="45" Margin="10,0"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Contraseña" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextDark}"/>
+                        <Border Stroke="{StaticResource Gray200}" StrokeThickness="1">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Entry x:Name="txtPassword" IsPassword="True" Placeholder="Mínimo 6 caracteres" HeightRequest="45" Margin="10,0"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Número de Celular" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextDark}"/>
+                        <Border Stroke="{StaticResource Gray200}" StrokeThickness="1">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Entry x:Name="txtCelular" Placeholder="09XXXXXXXX" Keyboard="Telephone" HeightRequest="45" Margin="10,0"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <Button Text="Finalizar Registro"
+                            Clicked="OnContinuarClicked"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="White"
+                            CornerRadius="15"
+                            HeightRequest="55"
+                            FontAttributes="Bold"
+                            FontSize="17"
+                            Margin="0,20,0,0"/>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,30,0,0" Spacing="5">
+                <Label Text="¿Ya tienes cuenta?" TextColor="{StaticResource TextLight}"/>
+                <Label Text="Inicia Sesión" 
+                       TextColor="{StaticResource Primary}" 
+                       FontAttributes="Bold"
+                       TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackClicked"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -47,6 +47,10 @@
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiSplashScreen Include="Resources\Images\splash.svg">
+		  <Color>#FF5757</Color>
+		  <BaseSize>700,700</BaseSize>
+		</MauiSplashScreen>
 
 		<!-- Splash Screen - COMENTADO TEMPORALMENTE -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#FF5757" BaseSize="700,700" />
@@ -62,6 +66,10 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 		
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiImage Remove="Resources\Images\splash.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -124,6 +132,9 @@
 		<MauiXaml Update="Views\AgregarTarjetaPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\LoginPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\PagoExitosoConsumoPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -132,6 +143,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\PagoPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\RegistroPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\SeguimientoEntregaPage.xaml">
 			<Generator>MSBuild:Compile</Generator>

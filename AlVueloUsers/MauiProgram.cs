@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AlVueloUsers.Data;
+using AlVueloUsers.Views;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Handlers;
 using SkiaSharp.Views.Maui.Controls.Hosting; // Necesario para los Handlers
 
@@ -22,16 +24,28 @@ namespace AlVueloUsers
                     fonts.AddFont("Font Awesome 7 Free-Solid-900.otf", "FASolid");
                 });
 
+            // --- REGISTRO DE SERVICIOS (DI) ---
+            builder.Services.AddDbContext<AlVueloDbContext>();
+
+            // Registramos las páginas para que puedan recibir el DbContext
+            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<RegistroPage>();
             // LOGICA PARA QUITAR LA BARRA MOLESTA EN ANDROID
 #if ANDROID
-            PickerHandler.Mapper.AppendToMapping("NoLineAndroid", (handler, view) =>
+            // 1. ELIMINAR LÍNEA DE LOS ENTRYS (TODO EL PROGRAMA)
+            EntryHandler.Mapper.AppendToMapping("NoLineEntry", (handler, view) =>
             {
-                // Eliminamos el fondo (background) que contiene la línea
+                // Quitamos el underline de Android
                 handler.PlatformView.Background = null;
                 handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
-                
-                // Opcional: Quitar padding interno para que quede bien alineado
                 handler.PlatformView.SetPadding(0, 0, 0, 0);
+            });
+
+            // 2. ELIMINAR LÍNEA DE LOS PICKERS
+            PickerHandler.Mapper.AppendToMapping("NoLinePicker", (handler, view) =>
+            {
+                handler.PlatformView.Background = null;
+                handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
             });
 
             // Cambiar color del indicador (botón) del RadioButton en Android al color AlVueloRed

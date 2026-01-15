@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AlVueloUsers.Models;
 using System;
+using Alvueloapp.Models;
 
 namespace AlVueloUsers.Data
 {
@@ -11,6 +12,7 @@ namespace AlVueloUsers.Data
         public DbSet<DetallePedido> DetallesPedidos { get; set; } // Agregado
 
         public DbSet<ClienteTarjeta> ClientesTarjetas { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
 
         public DbSet<Mesa> Mesas { get; set; }
 
@@ -54,6 +56,7 @@ namespace AlVueloUsers.Data
                 .HasKey(ct => new { ct.ClienteId, ct.NumTarjeta });
 
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Cliente>().ToTable("Cliente");
         }
     }
 }
