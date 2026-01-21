@@ -390,7 +390,7 @@ namespace AlVueloUsers.Views
 
             _updateTimer?.Stop();
             // Regresar al Home y borrar historial de navegación
-            Application.Current.MainPage = new NavigationPage(new PagoPage()); // O tu HomePage real
+            Application.Current.MainPage = new NavigationPage(new RestaurantesPage()); // O tu HomePage real
         }
 
         protected override void OnDisappearing()

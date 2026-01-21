@@ -39,11 +39,13 @@ namespace AlVueloUsers.Views
 
             // 4. Cargar datos
             CargarTarjetaDesdeBD();
+            CargarTotales();
             SetupInitialServicios();
             UpdatePaymentMethodsAvailability();
 
             // 5. Inicializar el total visualmente (Calcula Envío + Total)
             UpdateEnvioAmountForService();
+
 
             // Forzar la selección visual inicial de la Tarjeta si existe
             if (GridMetodo_Tarjeta != null)
@@ -56,19 +58,19 @@ namespace AlVueloUsers.Views
 
         private void ActualizarTotal()
         {
-            // Cálculo del Total Real
+            // Suma real de las variables actualizadas
             decimal totalCalculado = _subtotalProductos + _tarifaServicio + _costoEnvio;
 
-            // Actualizar Label Total en la UI
+            // Actualizar el Label del Total
             if (LabelTotal != null)
             {
-                LabelTotal.Text = $"${totalCalculado:F2}";
+                LabelTotal.Text = totalCalculado.ToString("C2");
             }
 
-            // Actualizar Botón Pagar para reflejar el monto
-            if (BtnPagar != null && BtnPagar.IsEnabled)
+            // Actualizar el texto del botón de pago
+            if (BtnPagar != null)
             {
-                BtnPagar.Text = $"Confirmar y Pagar (${totalCalculado:F2})";
+                BtnPagar.Text = $"Confirmar y Pagar ({totalCalculado:C2})";
             }
         }
 
@@ -534,6 +536,24 @@ namespace AlVueloUsers.Views
             {
                 return "0000";
             }
+        }
+
+        private void CargarTotales()
+        {
+            // 1. Obtener la instancia del carrito
+            var carrito = CarritoService.Instancia;
+
+            // 2. ACTUALIZAR LAS VARIABLES NUMÉRICAS (Esto es lo que faltaba)
+            // Convertimos a decimal ya que el servicio suele usar double
+            _subtotalProductos = (decimal)carrito.Subtotal;
+            _tarifaServicio = (decimal)carrito.Servicio;
+
+            // 3. Actualizar los labels visuales del resumen
+            LabelSubtotal.Text = _subtotalProductos.ToString("C2");
+            LabelServicio.Text = _tarifaServicio.ToString("C2");
+
+            // 4. Llamar a la lógica de envío para que sume todo correctamente
+            UpdateEnvioAmountForService();
         }
     }
 }

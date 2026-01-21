@@ -63,7 +63,7 @@ public partial class LoginPage : ContentPage
                 await Task.Delay(500);
 
                 // Navegar a la página principal
-                await Shell.Current.GoToAsync("///MainPage");
+                await Shell.Current.GoToAsync("///restaurantes");
             }
             else
             {

@@ -16,6 +16,12 @@ namespace AlVueloUsers.Data
 
         public DbSet<Mesa> Mesas { get; set; }
 
+        // Restaurante
+        public DbSet<Restaurante> Restaurantes { get; set; }
+        public DbSet<Menu> Menus { get; set; }
+        public DbSet<Plato> Platos { get; set; }
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (optionsBuilder.IsConfigured)
@@ -29,7 +35,7 @@ namespace AlVueloUsers.Data
             if (OperatingSystem.IsAndroid())
             {
                 // Android emulator (Google) uses 10.0.2.2 to reach host machine
-                var server = "10.0.2.2";
+                var server = "172.20.10.5";
                 var port = "1433";
 
                 // Read SQL user/pass from environment variables to avoid hardcoding credentials

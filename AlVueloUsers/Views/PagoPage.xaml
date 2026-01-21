@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AlVueloUsers.Views.PagoPage"
-             BackgroundColor="{StaticResource AlVueloBg}">
+             BackgroundColor="White">
 
     <Grid RowDefinitions="Auto, *, Auto">
 
@@ -136,11 +136,11 @@
                         <VerticalStackLayout Spacing="12">
                             <Grid ColumnDefinitions="*, Auto">
                                 <Label Text="Productos" TextColor="#666666" FontSize="14"/>
-                                <Label Grid.Column="1" Text="$0.96" FontSize="14" TextColor="#1a1a1a"/>
+                                <Label x:Name="LabelSubtotal" Grid.Column="1" Text="$0.00" FontSize="14" TextColor="#1a1a1a"/>
                             </Grid>
                             <Grid ColumnDefinitions="*, Auto">
                                 <Label Text="Tarifa de servicio" TextColor="#666666" FontSize="14"/>
-                                <Label Grid.Column="1" Text="$0.96" FontSize="14" TextColor="#1a1a1a"/>
+                                <Label x:Name="LabelServicio" Grid.Column="1" Text="$0.00" FontSize="14" TextColor="#1a1a1a"/>
                             </Grid>
                             <Grid ColumnDefinitions="*, Auto">
                                 <Label Text="Envío" TextColor="#666666" FontSize="14"/>

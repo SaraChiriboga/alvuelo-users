@@ -11,4 +11,11 @@
         Title="Home"
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="LoginPage" />
+    <ShellContent
+        Route="restaurantes"
+        ContentTemplate="{DataTemplate views:RestaurantesPage}" />
+    <ShellContent
+        Route="PagoPage"
+        ContentTemplate="{DataTemplate views:PagoPage}" />
+
 </Shell>

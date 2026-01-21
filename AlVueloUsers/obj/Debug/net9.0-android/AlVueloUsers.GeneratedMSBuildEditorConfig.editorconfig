@@ -1,0 +1,121 @@
+is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = true
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
+build_property.TargetFramework = net9.0-android
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = AlVueloUsers
+build_property.ProjectDir = C:\Users\saril\Desktop\alvuelo-users-master\alvuelo-users-master\alvuelo-users-master\AlVueloUsers\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.EffectiveAnalysisLevelStyle = 9.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/App.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.App.xaml
+build_metadata.AdditionalFiles.TargetPath = App.xaml
+build_metadata.AdditionalFiles.RelativePath = App.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/AppShell.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.AppShell.xaml
+build_metadata.AdditionalFiles.TargetPath = AppShell.xaml
+build_metadata.AdditionalFiles.RelativePath = AppShell.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/MainPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.MainPage.xaml
+build_metadata.AdditionalFiles.TargetPath = MainPage.xaml
+build_metadata.AdditionalFiles.RelativePath = MainPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Resources/Styles/Colors.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Resources.Styles.Colors.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Colors.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Colors.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Resources/Styles/Styles.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Resources.Styles.Styles.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Styles.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/AgregarTarjetaPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.AgregarTarjetaPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\AgregarTarjetaPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\AgregarTarjetaPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/CarritoPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.CarritoPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\CarritoPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\CarritoPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/LoginPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.LoginPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\LoginPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\LoginPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/PagoExitosoConsumoPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.PagoExitosoConsumoPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\PagoExitosoConsumoPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\PagoExitosoConsumoPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/PagoExitosoEntregaPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.PagoExitosoEntregaPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\PagoExitosoEntregaPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\PagoExitosoEntregaPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/PagoExitosoRetiroPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.PagoExitosoRetiroPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\PagoExitosoRetiroPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\PagoExitosoRetiroPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/PagoPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.PagoPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\PagoPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\PagoPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/PlatosPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.PlatosPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\PlatosPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\PlatosPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/RegistroPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.RegistroPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\RegistroPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\RegistroPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/RestaurantesPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.RestaurantesPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\RestaurantesPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\RestaurantesPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/SeguimientoEntregaPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.SeguimientoEntregaPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\SeguimientoEntregaPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\SeguimientoEntregaPage.xaml
+
+[C:/Users/saril/Desktop/alvuelo-users-master/alvuelo-users-master/alvuelo-users-master/AlVueloUsers/Views/SeleccionMesaPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = AlVueloUsers.Views.SeleccionMesaPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\SeleccionMesaPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\SeleccionMesaPage.xaml
